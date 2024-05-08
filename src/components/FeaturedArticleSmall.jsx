@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function ArticlesList({ articles }) {
 
   if (!articles) {
@@ -14,10 +16,9 @@ export default function ArticlesList({ articles }) {
               <h3 className="mb-0">{article.title.length > 45 ? `${article.title.slice(0,45)}...` : article.title}</h3>
               <div className="mb-1 text-body-secondary">{article.created_at.slice(0,10)}</div>
               <p className="card-text mb-auto">{article.body.slice(0,80)}</p>
-              <a href="#" className="icon-link gap-1 icon-link-hover stretched-link">
+              <Link to={`/articles/${article.article_id}`} className="icon-link gap-1 icon-link-hover stretched-link">
                 Continue reading
-                <svg className="bi"><use xlinkHref="#chevron-right"></use></svg>
-              </a>
+              </Link>
             </div>
             <div className="col-auto d-none d-lg-block">
               <div className="featured-article-img-container">
