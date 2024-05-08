@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import CommentsSection from "./CommentsSection";
 
 export default () => {
 
@@ -27,11 +28,12 @@ export default () => {
                       <div className="text-muted fst-italic mb-2">Posted on {article.created_at} by {article.author}</div>
                       <a className="badge bg-secondary text-decoration-none link-light" href="#!">{article.topic}</a>
                   </header>
-                  <figure className="mb-4"><img className="img-fluid rounded" src={article.article_img_url} alt="..." /></figure>
+                  <figure className="mb-4"><img className="img-fluid rounded article-page-img" src={article.article_img_url} alt="..." /></figure>
                   <section className="mb-5">
                       <p className="fs-5 mb-4">{article.body}</p>
                   </section>
               </article>
+              <CommentsSection article_id={article.article_id}/>
           </div>
       </div>
     </div>

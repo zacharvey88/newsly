@@ -205,3 +205,24 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 230px;
   }
 }
+
+
+.comment {
+  margin-bottom: 20px;
+}
+
+.rounded-circle {
+  height: 50px;
+  width: 50px;
+}
+
+.comment-date {
+  margin-left: 10px;
+  font-weight: normal;
+  font-size: 0.8em;
+}
+
+.article-page-img {
+  width: 100%;
+  height: auto;
+}
