@@ -302,3 +302,19 @@ h1, h2, h3, h4, h5, h6 {
   width: 2em;
   margin-left: 5px; 
 }
+
+.delete-comment {
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.comment-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.comment {
+  width: 100%;
+}
