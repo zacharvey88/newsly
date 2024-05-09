@@ -12,7 +12,7 @@ export default ({ articles }) => {
           <h3 className="link-body-emphasis mb-1">{article.title}</h3>
         </Link>
         <p className="blog-post-meta">
-          {article.created_at.slice(0, 10)} by <a href="#">{article.author}</a>
+          {article.created_at.slice(0, 10)} by {article.author}
         </p>
         <p>{article.body.slice(0, 500)}</p>
         <div className="article-stats">
