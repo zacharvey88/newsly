@@ -9,6 +9,7 @@ export default ({ article_id }) => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [disabled, setDisabled] = useState(false);
   const { user, setUser } = useContext(UserContext);
+  const [inProgress, setInProgress] = useState(false)
 
   useEffect(() => {
     axios
@@ -32,6 +33,7 @@ export default ({ article_id }) => {
     } else {
       setIsEmpty(true);
       setDisabled(true);
+      setInProgress(true)
 
       const newComment = {
         username: user.username,
@@ -51,6 +53,7 @@ export default ({ article_id }) => {
           setComments((existingComments) => {
             return [...existingComments, newComment];
           });
+          setInProgress(false)
         })
         .catch((err) => {
           console.log(err);
@@ -95,7 +98,7 @@ export default ({ article_id }) => {
               <input
                 type="submit"
                 disabled={disabled}
-                value="Post Comment"
+                value={inProgress ? "In Progress..." : "Post Comment"}
                 className="btn btn-sm btn-outline-secondary btn-comment"
               ></input>
               <p className={isEmpty && user ? "hidden" : "warning"}>

@@ -10,10 +10,9 @@ export default () => {
   return (
     <header className="border-bottom lh-1 py-3">
       <div className="row flex-nowrap justify-content-between align-items-center">
-        <div className="col-4 pt-1">
-          <a className="link-secondary" href="#">
-            Submit an article
-          </a>
+        <div className="col-4 pt-1 main-nav">
+          <Link className="link-secondary" to="/">Home</Link>
+          <Link className="link-secondary" to="/write-article">Submit an article</Link>
         </div>
         <div className="col-4 text-center">
           <Link to="/">

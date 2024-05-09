@@ -16,20 +16,27 @@ export default () => {
       });
   }, []);
 
+  const formattedTopics = topics.map((topic)=>{
+    const splitTopic = topic.slug.split("-").map((word)=>{
+      return `${word[0].toUpperCase()}${word.slice(1,word.length)}`
+    })
+    return {...topic, nav: splitTopic.join(" ")}
+  })
+
   return (
     <div className="nav-scroller py-1 mb-3 border-bottom">
       <nav className="nav nav-underline justify-content-between">
         <Link className="nav-item nav-link link-body-emphasis active" to="/">
           All
         </Link>
-        {topics.map((topic) => {
+        {formattedTopics.map((topic) => {
           return (
             <Link
               key={topic.slug}
               className="nav-item nav-link link-body-emphasis"
-              to="/"
+              to={`/${topic.slug}/articles`}
             >
-              {topic.slug.split("-").join(" ")}
+              {topic.nav}
             </Link>
           );
         })}
