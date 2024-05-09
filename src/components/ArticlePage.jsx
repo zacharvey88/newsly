@@ -79,7 +79,11 @@ export default () => {
             </figure>
             <p className="likes">
               <i
-                className={liked ? "like-btn fa-solid fa-heart disabled" : "like-btn fa-regular fa-heart"}
+                className={
+                  liked
+                    ? "like-btn fa-solid fa-heart disabled"
+                    : "like-btn fa-regular fa-heart"
+                }
                 onClick={liked ? handleUnlike : handleLike}
               ></i>{" "}
               {votes}
