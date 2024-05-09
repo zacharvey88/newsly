@@ -63,6 +63,18 @@ export default ({ article_id }) => {
     }
   };
 
+  const handleRemoveComment = (comment_id) => {
+    setComments((existingComments) => {
+      return existingComments.filter((comment) => comment.comment_id !== comment_id);
+    });
+    axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment_id}`)
+    .then((response)=>{
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
+
   return (
     <section className="mb-5">
       <div className="card bg-light">
@@ -97,19 +109,26 @@ export default ({ article_id }) => {
           {comments.length
             ? comments.map((comment) => {
                 return (
-                  <div key={comment.comment_id} className="d-flex comment">
+                  <div key={comment.comment_id} className="d-flex">
                     <div className="flex-shrink-0">
                       <img
                         className="rounded-circle"
                         src={comment.avatar_url}
                       />
                     </div>
-                    <div className="ms-3">
-                      <div className="fw-bold">
+                    <div className="ms-3 comment">
+                      <div className="fw-bold comment-meta">
+                        <div>
                         {comment.author}
                         <span className="comment-date">
                           {comment.created_at.slice(0, 16)}
                         </span>
+                        </div>
+                        {comment.author === user.username ? 
+                          <span>
+                            <i onClick={()=>{handleRemoveComment(comment.comment_id)}} className="fa-solid fa-trash delete-comment"></i>
+                          </span>
+                        : null}
                       </div>
                       {comment.body}
                     </div>
