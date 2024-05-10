@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import CommentsSection from "../components/CommentsSection";
 import LoadingScreen from "../utilities/LoadingScreen";
+import { Navigate } from "react-router-dom";
 
 export default () => {
   const { article_id } = useParams();
@@ -10,6 +11,7 @@ export default () => {
   const [liked, setLiked] = useState(false);
   const [votes, setVotes] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     const storedLike = JSON.parse(localStorage.getItem(`liked_${article_id}`));
@@ -26,6 +28,7 @@ export default () => {
       })
       .catch((err) => {
         console.log(err);
+        err.response.status === 404 ? setIsError(true) : null
       });
   }, [article_id]);
 
@@ -57,52 +60,53 @@ export default () => {
       });
   };
 
-  return isLoading ? (
-    <LoadingScreen />
-  ) : (
-    <>
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col-lg-8">
-            <article>
-              <header className="mb-4">
-                <h1 className="fw-bolder mb-1">{article.title}</h1>
-                <div className="text-muted fst-italic mb-2">
-                  Posted on {article.created_at} by {article.author}
-                </div>
-                <a
-                  className="badge bg-secondary text-decoration-none link-light"
-                  href="#!"
-                >
-                  {article.topic}
-                </a>
-              </header>
-              <figure className="mb-4">
-                <img
-                  className="img-fluid rounded article-page-img"
-                  src={article.article_img_url}
-                  alt="Article"
-                />
-              </figure>
-              <p className="likes">
-                <i
-                  className={
-                    liked
-                      ? "like-btn fa-solid fa-heart disabled"
-                      : "like-btn fa-regular fa-heart"
-                  }
-                  onClick={liked ? handleUnlike : handleLike}
-                ></i>{" "}
-                {votes}
-              </p>
-              <section className="mb-5">
-                <p className="fs-5 mb-4">{article.body}</p>
-              </section>
-            </article>
-            <CommentsSection article_id={article_id} />
+  return isError ?  <Navigate to="/not-found" state={"article"}/> :( isLoading ? (
+      <LoadingScreen />
+    ) : (
+      <>
+        <div className="container mt-5">
+          <div className="row">
+            <div className="col-lg-8">
+              <article>
+                <header className="mb-4">
+                  <h1 className="fw-bolder mb-1">{article.title}</h1>
+                  <div className="text-muted fst-italic mb-2">
+                    Posted on {article.created_at} by {article.author}
+                  </div>
+                  <a
+                    className="badge bg-secondary text-decoration-none link-light"
+                    href="#!"
+                  >
+                    {article.topic}
+                  </a>
+                </header>
+                <figure className="mb-4">
+                  <img
+                    className="img-fluid rounded article-page-img"
+                    src={article.article_img_url}
+                    alt="Article"
+                  />
+                </figure>
+                <p className="likes">
+                  <i
+                    className={
+                      liked
+                        ? "like-btn fa-solid fa-heart disabled"
+                        : "like-btn fa-regular fa-heart"
+                    }
+                    onClick={liked ? handleUnlike : handleLike}
+                  ></i>{" "}
+                  {votes}
+                </p>
+                <section className="mb-5">
+                  <p className="fs-5 mb-4">{article.body}</p>
+                </section>
+              </article>
+              <CommentsSection article_id={article_id} />
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    )
+  )
 };

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ArticlesList from "../components/ArticlesList";
@@ -13,6 +13,7 @@ export default () => {
   const [sortBy, setSortBy] = useState("");
   const [toggled, setToggled] = useState(false);
   const urlParams = {};
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     let query = `https://nc-news-ngma.onrender.com/api/articles?topic=${topic}`;
@@ -32,9 +33,11 @@ export default () => {
       .then((response) => {
         setArticles(response.data.articles);
         setIsLoading(false);
+        setIsError(false)
       })
       .catch((err) => {
         console.log(err);
+        err.response.status === 404 ? setIsError(true) : null
       })
 
       const url = queryString.stringify(urlParams);
@@ -42,18 +45,20 @@ export default () => {
 
   }, [topic, sortBy, toggled]);
 
-  return isLoading ? (
-    <LoadingScreen />
-  ) : (
-    <>
-      <ResultsHeader
-        articles={articles}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        toggled={toggled}
-        setToggled={setToggled}
-      />
-      <ArticlesList articles={articles} />
-    </>
-  );
+  return isError ? <Navigate to="/not-found" state={"topic"}/> : ( 
+      isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          <ResultsHeader
+            articles={articles}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            toggled={toggled}
+            setToggled={setToggled}
+          />
+          <ArticlesList articles={articles} />
+        </>
+      )
+    )
 };
