@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import CommentsSection from "../components/CommentsSection";
-import LoadingScreen from "../components/LoadingScreen";
+import LoadingScreen from "../utilities/LoadingScreen";
 
 export default () => {
   const { article_id } = useParams();

@@ -2,11 +2,11 @@ import FeaturedArticleLarge from "../components/FeaturedArticleLarge";
 import FeaturedArticleSmall from "../components/FeaturedArticleSmall";
 import RecentPosts from "../components/RecentPosts";
 import SidebarCard from "../components/SidebarCard";
-import Pagination from "../components/Pagination";
+import Pagination from "../utilities/Pagination";
 import ArticlesList from "../components/ArticlesList";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import LoadingScreen from "../components/LoadingScreen";
+import LoadingScreen from "../utilities/LoadingScreen";
 
 export default () => {
 
