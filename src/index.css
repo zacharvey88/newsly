@@ -330,3 +330,83 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
 }
+
+.results-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  align-items: center;
+}
+
+.dropdown-sort {
+  background-color: #1c5b82;
+  width: 130px;
+  border: none;
+  height: 2em;
+  padding: 5px;
+  font-size: .9em;
+  color: white;
+  border-radius: 5px;
+}
+
+.dropdown-item {
+  font-size: .9em;
+}
+
+.results-header-sorting {
+  display: flex;
+  flex-direction: row;
+}
+
+
+/* ---------- Toggle Button ---------- */
+
+.toggle-btn {
+  background-color: #b7b9ba;
+  border: 1px solid #aaa;
+  border-radius: 99px;
+  width: 40px;
+  height: 28px;
+  transition: background-color 0.1s ease, border-colour 0.2s;
+  cursor: pointer;
+  position: relative;
+  font-size: .8em;
+  margin: 0 10px;
+}
+
+.toggle-btn .thumb {
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border-radius: 99px;
+  transform: translateX(0);
+  transition: left 0.15 s ease;
+  position:  absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.toggle-btn.toggled {
+  background-color: #1c5b82;
+  color: white;
+}
+
+.toggle-btn:hover {
+  border-color: #6f6f6f;
+}
+
+.toggle-btn.toggled .thumb {
+  left: calc(50px - 35px);
+}
+
+.toggle-text {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 0.8em;
+  text-align: right;
+  line-height: 1em;
+}
