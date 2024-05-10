@@ -33,7 +33,6 @@ export default () => {
           <div className="row g-5">
             <div className="col-md-8">
               <ArticlesList articles={articles.slice(3)} />
-              <Pagination />
             </div>
             <div className="col-md-4">
               <div className="position-sticky">

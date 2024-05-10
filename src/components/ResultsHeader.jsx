@@ -5,7 +5,7 @@ export default ({ articles, sortBy, setSortBy, toggled, setToggled}) => {
     <div className="results-header">
       Showing {articles.length} of {articles.length} results
       <div className="results-header-sorting">
-        <p className="toggle-text">{toggled ? "Descending order" : "Ascending order"}</p>
+        <p className="toggle-text">{toggled ? "ASC" : "DESC"}</p>
         <ToggleButton toggled={toggled} setToggled={setToggled} />
         <select
           className="dropdown-sort"

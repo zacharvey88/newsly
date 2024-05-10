@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import ArticlePage from './pages/ArticlePage';
 import TopicPage from './pages/TopicPage';
 import Footer from './components/Footer';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -14,10 +15,12 @@ function App() {
         <Header />
         <div className="container">
           <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/articles/:article_id" element={<ArticlePage />}></Route>
-            <Route path="/:topic/articles" element={<TopicPage />}></Route>
-            <Route path="/login" element={<Login />}></Route>
+            <Route path="*" element={<NotFound/>}></Route>
+            <Route path="/not-found" element={<NotFound/>}></Route>
+            <Route exact path="/" element={<Home />}></Route>
+            <Route exact path="/articles/:article_id" element={<ArticlePage />}></Route>
+            <Route exact path="/:topic/articles" element={<TopicPage />}></Route>
+            <Route exact path="/login" element={<Login />}></Route>
           </Routes>
         </div>
         <Footer />
