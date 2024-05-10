@@ -7,7 +7,7 @@ export default () => {
 
   return <div className="not-found">
     <img src={notFoundImg}></img>
-    <p>Oops... {state ? {state} : "page"} not found</p>
+    <p>Oops... {state ? state : "page"} not found</p>
     <Link to="/"><button className="btn btn-sm btn-outline-secondary">Go Home</button></Link>
     </div>
 }
