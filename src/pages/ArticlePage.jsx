@@ -11,6 +11,7 @@ export default () => {
   const [liked, setLiked] = useState(false);
   const [votes, setVotes] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [isError, setIsError] = useState(false)
 
   useEffect(() => {
@@ -28,42 +29,52 @@ export default () => {
       })
       .catch((err) => {
         console.log(err);
-        err.response.status === 404 ? setIsError(true) : null
+        err.response.status === 404 ? setNotFound(true) : null
       });
   }, [article_id]);
 
   const handleLike = () => {
+    const votesBackup = votes
     setLiked(true);
     setVotes(votes + 1);
-    localStorage.setItem(`liked_${article_id}`, JSON.stringify(true));
     axios
       .patch(`https://nc-news-ngma.onrender.com/api/articles/${article_id}`, {
         inc_votes: votes + 1,
       })
-      .then((response) => {})
+      .then((response) => {
+        localStorage.setItem(`liked_${article_id}`, JSON.stringify(true));
+      })
       .catch((err) => {
+        setIsError(true)
+        setLiked(false);
+        setVotes(votesBackup);
         console.log(err);
       });
   };
 
   const handleUnlike = () => {
+    const votesBackup = votes
     setLiked(false);
     setVotes(votes - 1);
-    localStorage.setItem(`liked_${article_id}`, JSON.stringify(false));
     axios
       .patch(`https://nc-news-ngma.onrender.com/api/articles/${article_id}`, {
         inc_votes: votes - 1,
       })
-      .then((response) => {})
+      .then((response) => {
+        localStorage.setItem(`liked_${article_id}`, JSON.stringify(false));
+      })
       .catch((err) => {
+        setIsError(true)
+        setLiked(true);
+        setVotes(votesBackup);
         console.log(err);
       });
   };
 
-  return isError ?  <Navigate to="/not-found" state={"article"}/> :( isLoading ? (
+  return notFound ?  <Navigate to="/not-found" state={"article"}/> :( isLoading ? (
       <LoadingScreen />
     ) : (
-      <>
+      <main>
         <div className="container mt-5">
           <div className="row">
             <div className="col-lg-8">
@@ -84,7 +95,7 @@ export default () => {
                   <img
                     className="img-fluid rounded article-page-img"
                     src={article.article_img_url}
-                    alt="Article"
+                    alt="Article picture"
                   />
                 </figure>
                 <p className="likes">
@@ -97,6 +108,7 @@ export default () => {
                     onClick={liked ? handleUnlike : handleLike}
                   ></i>{" "}
                   {votes}
+                  <span className="warning like-error">{isError ? "Something went wrong, please try again" : null}</span>
                 </p>
                 <section className="mb-5">
                   <p className="fs-5 mb-4">{article.body}</p>
@@ -106,7 +118,7 @@ export default () => {
             </div>
           </div>
         </div>
-      </>
+      </main>
     )
   )
 };

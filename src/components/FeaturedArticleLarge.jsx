@@ -6,7 +6,7 @@ export default ({ article }) => {
   }
 
   return (
-    <div
+    <section
       className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-featured-article"
       style={{ backgroundImage: `url(${article.article_img_url})` }}
     >
@@ -24,6 +24,6 @@ export default ({ article }) => {
           </Link>
         </p>
       </div>
-    </div>
+    </section>
   );
 };

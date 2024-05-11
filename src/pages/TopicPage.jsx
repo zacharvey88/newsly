@@ -49,7 +49,7 @@ export default () => {
       isLoading ? (
         <LoadingScreen />
       ) : (
-        <>
+        <section className="container">
           <ResultsHeader
             articles={articles}
             sortBy={sortBy}
@@ -58,7 +58,7 @@ export default () => {
             setToggled={setToggled}
           />
           <ArticlesList articles={articles} />
-        </>
+        </section>
       )
     )
 };

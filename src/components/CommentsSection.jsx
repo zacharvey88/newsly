@@ -6,10 +6,12 @@ import { UserContext } from "../contexts/User";
 export default ({ article_id }) => {
   const [comments, setComments] = useState([]);
   const [commentBody, setCommentBody] = useState("");
-  const [isEmpty, setIsEmpty] = useState(true);
+  // const [isEmpty, setIsEmpty] = useState(true);
   const [disabled, setDisabled] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const [inProgress, setInProgress] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [errMsg, setErrMsg] = useState("")
 
   useEffect(() => {
     axios
@@ -23,58 +25,64 @@ export default ({ article_id }) => {
         console.log(err);
       });
   }, [article_id]);
+  
 
   const handleAddComment = (e) => {
     e.preventDefault();
 
-    if (!commentBody) {
-      setIsEmpty(false);
-      return;
-    } else {
-      setIsEmpty(true);
-      setDisabled(true);
-      setInProgress(true)
-
-      const newComment = {
-        username: user.username,
-        body: commentBody,
-      };
-
-      axios
-        .post(
-          `https://nc-news-ngma.onrender.com/api/articles/${article_id}/comments`,
-          newComment
-        )
-        .then((response) => {
-          const newComment = {
-            ...response.data.comment,
-            avatar_url: user.avatar_url,
-          };
-          setComments((existingComments) => {
-            return [...existingComments, newComment];
-          });
-          setInProgress(false)
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setDisabled(false);
-        });
-
-      setCommentBody("");
+    if (!user.username) {
+      setIsError(true)
+      return setErrMsg("You must be logged in to comment")
     }
-  };
+    else if (!commentBody) {
+      setIsError(true)
+      return setErrMsg("Please enter a comment")
+    }
+
+    setInProgress(true)
+    setDisabled(true);
+
+    const newComment = {
+      username: user.username,
+      body: commentBody,
+    };
+
+    axios
+      .post(`https://nc-news-ngma.onrender.com/api/articles/${article_id}/comments`, newComment)
+      .then((response) => {
+        const newComment = {
+          ...response.data.comment,
+          avatar_url: user.avatar_url,
+        };
+        setComments((existingComments) => {
+          return [newComment, ...existingComments];
+        });
+        setInProgress(false)
+        setIsError(false)
+        setDisabled(false);
+        setCommentBody("");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsError(true)
+        setErrMsg("Something went wrong. Please try again")
+      })
+    }
 
   const handleRemoveComment = (comment_id) => {
+    const commentsBackup = [...comments]
     setComments((existingComments) => {
       return existingComments.filter((comment) => comment.comment_id !== comment_id);
     });
     axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment_id}`)
     .then((response)=>{
+      console.log(response.data);
     })
     .catch((err)=>{
       console.log(err);
+      setIsError(true)
+      setErrMsg("Something went wrong. Please try again")
+      setComments(commentsBackup)
     })
   }
 
@@ -85,10 +93,10 @@ export default ({ article_id }) => {
           <form className="mb-4 comment-form" onSubmit={handleAddComment}>
             <textarea
               className={
-                isEmpty ? "form-control" : "form-control warning-border"
+                `form-control ${isError ? "warning-border" : null}`
               }
               rows="3"
-              placeholder="Join the discussion and leave a comment!"
+              placeholder="Join the discussion! Leave a comment..."
               value={commentBody}
               onChange={(e) => {
                 setCommentBody(e.target.value);
@@ -101,11 +109,8 @@ export default ({ article_id }) => {
                 value={inProgress ? "In Progress..." : "Post Comment"}
                 className="btn btn-sm btn-outline-secondary btn-comment"
               ></input>
-              <p className={isEmpty && user ? "hidden" : "warning"}>
-                <i className="fa-solid fa-triangle-exclamation"></i>{" "}
-                {user.username
-                  ? "Please enter a comment"
-                  : "You need to log in to leave a comment"}
+              <p className={isError ? "warning" : "hidden"}>
+                {errMsg}
               </p>
             </div>
           </form>
@@ -117,6 +122,7 @@ export default ({ article_id }) => {
                       <img
                         className="rounded-circle"
                         src={comment.avatar_url}
+                        alt="User avatar"
                       />
                     </div>
                     <div className="ms-3 comment">
@@ -128,8 +134,8 @@ export default ({ article_id }) => {
                         </span>
                         </div>
                         {comment.author === user.username ? 
-                          <span>
-                            <i onClick={()=>{handleRemoveComment(comment.comment_id)}} className="fa-solid fa-trash delete-comment"></i>
+                          <span className="delete-comment">
+                            <i onClick={()=>{handleRemoveComment(comment.comment_id)}} className="fa-solid fa-trash delete-comment-icon"></i>
                           </span>
                         : null}
                       </div>

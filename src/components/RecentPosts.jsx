@@ -6,7 +6,7 @@ export default ({ articles }) => {
   }
 
   return (
-    <div>
+    <section>
       <h4 className="fst-italic">Recent posts</h4>
       <ul className="list-unstyled">
         {articles.slice(4, 7).map((article) => {
@@ -21,6 +21,7 @@ export default ({ articles }) => {
                   width="100%"
                   height="96"
                   src={article.article_img_url}
+                  alt="Article picture"
                 ></img>
                 <div className="col-lg-8">
                   <h6 className="mb-0">{article.title}</h6>
@@ -33,6 +34,6 @@ export default ({ articles }) => {
           );
         })}
       </ul>
-    </div>
+    </section>
   );
 };

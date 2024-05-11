@@ -6,9 +6,9 @@ export default function ArticlesList({ articles }) {
   }
 
   return (
-    <div className="row mb-2">
+    <ul className="row mb-2 featured-articles">
       {articles.map((article, index) => (
-        <div key={index} className="col-md-6">
+        <li key={index} className="col-md-6 featured-articles-item">
           <div className="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div className="col p-4 d-flex flex-column position-static">
               <strong className="d-inline-block mb-2 text-primary-emphasis">
@@ -35,12 +35,13 @@ export default function ArticlesList({ articles }) {
                 <img
                   className="featured-article-img"
                   src={article.article_img_url}
+                  alt="Article picture"
                 />
               </div>
             </div>
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
