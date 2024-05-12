@@ -1,7 +1,8 @@
 # NEWSLY
 
 View the initial plan for this project [here](https://excalidraw.com/#json=2Gr-S-XAVfyVtgPTiueBI,L6_VPlZIrK2ib7n-pBW_fw)
-<br/>
+
+
 Welcome to the Newsly, a web application built using React with Vite, communicating with a Node.js backend hosted on Render. This project is part of my software development bootcamp with Northcoders and builds on the backend which I previously built. You can view that repositry [here](https://github.com/zacharvey88/nc-news).
 
 ## Functionality
@@ -26,7 +27,8 @@ Users can like an article by simply clicking the heart icon when viewing an arti
 Articles can be sorted by date, likes or comments and furthermore, descending or ascending. Each time a different sorting option is chosen, the database is re-queried with the selected parameters to ensure the most up to date data is served.
 
 ## Try it yourself
-To use the Newsly, simply visit the deployed site on [Netlify](https://zacharvey-newsly.netlify.app/). From there, you can log into an existing account, browse articles, read content, and engage with other users through comments.
-<br/>
+To use the Newsly, simply visit the deployed site on [Netlify](https://zacharvey-newsly.netlify.app/). **Please note that the service spins down with inactvity so when initially visiting the site, it can take some time to get a response from the API.** From there, you can log into an existing account, browse articles, read content, and engage with other users through comments.
+
+
 If you have any questions or feedback, please don't hesitate to reach out to me at [projects@zacharvey.com].
 

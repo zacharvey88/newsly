@@ -21,8 +21,23 @@ export default () => {
     <header className="border-bottom lh-1 py-3">
       <div className="row flex-nowrap justify-content-between align-items-center">
         <div className="col-4 pt-1 main-nav">
-          <Link className="link-secondary" to="/">Home</Link>
-          <Link className="link-secondary" to="/write-article">Submit an article</Link>
+          <div className="main-nav-links">
+            <Link className="link-secondary" to="/"><i className="fa-solid fa-house"></i> Home</Link>
+            <Link className="link-secondary" to="/write-article"><i className="fa-solid fa-file-pen"></i> Submit an article</Link>
+          </div>
+          <Dropdown className="main-nav-toggle">
+            <DropdownToggle as={Link} >
+              <i className="fa-solid fa-bars"></i>
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem>
+                <Link to="/">Home</Link>
+              </DropdownItem>
+              <DropdownItem>
+                <Link to="/write-article">Submit an article</Link>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
         <div className="col-4 text-center">
           <Link to="/">
@@ -39,7 +54,6 @@ export default () => {
                 <img
                   className="nav-user-avatar rounded-circle"
                   src={user.avatar_url}
-                  alt="User avatar"
                 />
               </DropdownToggle>
               <DropdownMenu>

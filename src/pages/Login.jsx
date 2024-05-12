@@ -40,6 +40,7 @@ export default () => {
     <div className="login-page">
       <form className="login-form" onSubmit={handleSubmit}>
         <input
+          autoFocus
           id="login-username"
           name="username"
           className={warningMsg ? "warning-border" : null}
