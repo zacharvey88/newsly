@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/User";
 
-export default ({ article_id }) => {
+export function CommentsSection ({ article_id }) {
   const [comments, setComments] = useState([]);
   const [commentBody, setCommentBody] = useState("");
   // const [isEmpty, setIsEmpty] = useState(true);
   const [disabled, setDisabled] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [inProgress, setInProgress] = useState(false)
   const [isError, setIsError] = useState(false)
   const [errMsg, setErrMsg] = useState("")
@@ -149,4 +149,4 @@ export default ({ article_id }) => {
       </div>
     </section>
   );
-};
+}
