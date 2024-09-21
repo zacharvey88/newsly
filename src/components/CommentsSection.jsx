@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/User";
 
-export function CommentsSection ({ article_id }) {
+export default ({ article_id }) => {
   const [comments, setComments] = useState([]);
   const [commentBody, setCommentBody] = useState("");
   // const [isEmpty, setIsEmpty] = useState(true);
