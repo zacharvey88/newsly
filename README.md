@@ -1,8 +1,5 @@
 # NEWSLY
 
-View the initial plan for this project [here](https://excalidraw.com/#json=2Gr-S-XAVfyVtgPTiueBI,L6_VPlZIrK2ib7n-pBW_fw)
-
-
 Welcome to the Newsly, a web application built using React with Vite, communicating with a Node.js backend hosted on Render. This project is part of my software development bootcamp with Northcoders and builds on the backend which I previously built. You can view that repositry [here](https://github.com/zacharvey88/nc-news).
 
 ## Functionality
