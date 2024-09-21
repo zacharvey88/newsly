@@ -43,7 +43,6 @@ export default() => {
 
   return (
     <div className="article-form-container">
-      <h2>Post an Article</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Title:
