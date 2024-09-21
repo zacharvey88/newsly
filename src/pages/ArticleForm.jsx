@@ -2,8 +2,7 @@ import axios from "axios";
 import { useState, useContext } from "react";
 import { UserContext } from "../contexts/User";
 
-export function ArticleForm() {
-  // Form state
+export default() => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [topic, setTopic] = useState("");
