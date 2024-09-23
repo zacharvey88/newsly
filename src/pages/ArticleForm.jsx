@@ -87,10 +87,15 @@ export default() => {
             onChange={(e) => setArticleImgUrl(e.target.value)}
           />
         </label>
-
-        <button type="submit" disabled={loading}>
+        <input
+          type="submit"
+          className={"btn btn-sm btn-outline-secondary"}
+          value="Login"
+          disabled={loading}
+        ></input>
+        {/* <button type="submit" disabled={loading}>
           {loading ? "Posting..." : "Submit"}
-        </button>
+        </button> */}
       </form>
 
       {successMessage && <p className="success-message">{successMessage}</p>}
