@@ -54,15 +54,6 @@ export default() => {
           />
         </label>
         <label>
-          Author:
-          <input
-            type="text"
-            value={user.username}
-            readOnly
-            disabled
-          />
-        </label>
-        <label>
           Body:
           <textarea
             value={body}
@@ -90,7 +81,7 @@ export default() => {
         <input
           type="submit"
           className={"btn btn-sm btn-outline-secondary"}
-          value="Login"
+          value="Submit Article"
           disabled={loading}
         ></input>
         {/* <button type="submit" disabled={loading}>
