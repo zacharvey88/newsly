@@ -8,8 +8,7 @@ export default () => {
       </p>
       <img className="header-logo" src={icon} alt="Newsly logo"/>
       <div className="footer-links">
-        <p>Made by <a href="https://www.linkedin.com/in/zacharvey/">zac harvey</a></p>
-        <p>View the code on <a href="https://github.com/zacharvey88/newsly">github</a></p>
+        <p>Made by <a href="https://www.linkedin.com/in/zacharvey/">zac harvey</a> | View the code on <a href="https://github.com/zacharvey88/newsly">github</a></p>
       </div>
     </footer>
   )

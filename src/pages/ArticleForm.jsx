@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/User";
 
-export default() => {
+export default () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [topic, setTopic] = useState("");
@@ -10,8 +10,20 @@ export default() => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [topics, setTopics] = useState([]); 
   const { user } = useContext(UserContext);
-  
+
+  useEffect(() => {
+    axios
+      .get("https://nc-news-ngma.onrender.com/api/topics")
+      .then((response) => {
+        setTopics(response.data.topics);
+      })
+      .catch((error) => {
+        setErrorMessage("Error fetching topics.");
+      });
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -20,13 +32,14 @@ export default() => {
 
     const articleData = {
       title,
-      author: user.username, 
+      author: user.username,
       body,
       topic,
       article_img_url: articleImgUrl ? articleImgUrl : null,
     };
 
-    axios.post("https://nc-news-ngma.onrender.com/api/articles", articleData)
+    axios
+      .post("https://nc-news-ngma.onrender.com/api/articles", articleData)
       .then((response) => {
         setLoading(false);
         setSuccessMessage("Article posted successfully!");
@@ -63,12 +76,18 @@ export default() => {
         </label>
         <label>
           Topic:
-          <input
-            type="text"
+          <select
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             required
-          />
+          >
+            <option value="">Select a topic</option>
+            {topics.map((topicItem) => (
+              <option key={topicItem.slug} value={topicItem.slug}>
+                {topicItem.slug}
+              </option>
+            ))}
+          </select>
         </label>
         <label>
           Article Image URL (optional):
@@ -84,13 +103,10 @@ export default() => {
           value="Submit Article"
           disabled={loading}
         ></input>
-        {/* <button type="submit" disabled={loading}>
-          {loading ? "Posting..." : "Submit"}
-        </button> */}
       </form>
 
       {successMessage && <p className="success-message">{successMessage}</p>}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
-}
+};
