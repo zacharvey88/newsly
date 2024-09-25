@@ -23,19 +23,23 @@ export default () => {
         <div className="col-4 pt-1 main-nav">
           <div className="main-nav-links">
             <Link className="link-secondary" to="/"><i className="fa-solid fa-house"></i> Home</Link>
-            <Link className="link-secondary" to="/new-article"><i className="fa-solid fa-file-pen"></i> Submit an article</Link>
+            {user.username && (
+              <Link className="link-secondary" to="/new-article"><i className="fa-solid fa-file-pen"></i> Submit an article</Link>
+            )}
           </div>
           <Dropdown className="main-nav-toggle">
-            <DropdownToggle as={Link} >
+            <DropdownToggle as={Link}>
               <i className="fa-solid fa-bars"></i>
             </DropdownToggle>
             <DropdownMenu>
               <DropdownItem>
                 <Link to="/">Home</Link>
               </DropdownItem>
-              <DropdownItem>
-                <Link to="/write-article">Submit an article</Link>
-              </DropdownItem>
+              {user.username && (
+                <DropdownItem>
+                  <Link to="/write-article">Submit an article</Link>
+                </DropdownItem>
+              )}
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -50,7 +54,7 @@ export default () => {
         <div className="col-4 d-flex justify-content-end align-items-center">
           {user.username ? (
             <Dropdown>
-              <DropdownToggle as={Link} >
+              <DropdownToggle as={Link}>
                 <img
                   className="nav-user-avatar rounded-circle"
                   src={user.avatar_url}
