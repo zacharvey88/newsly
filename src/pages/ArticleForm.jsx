@@ -10,7 +10,7 @@ export default () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [topics, setTopics] = useState([]); 
+  const [topics, setTopics] = useState([]);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -55,28 +55,41 @@ export default () => {
   };
 
   return (
-    <div className="article-form-container">
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title:
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh" }} // Full viewport height for centering
+    >
+      <form
+        onSubmit={handleSubmit}
+        className="border p-4 rounded shadow-sm"
+        style={{ width: "100%", maxWidth: "400px" }} // Limit the form width
+      >
+        <div className="mb-3">
+          <label className="form-label">Title:</label>
           <input
             type="text"
+            className="form-control form-control-sm"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-        </label>
-        <label>
-          Body:
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Body:</label>
           <textarea
+            className="form-control"
             value={body}
             onChange={(e) => setBody(e.target.value)}
             required
+            style={{ minHeight: "150px" }} // Larger height for the body textarea
           ></textarea>
-        </label>
-        <label>
-          Topic:
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Topic:</label>
           <select
+            className="form-control form-control-sm"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             required
@@ -88,25 +101,30 @@ export default () => {
               </option>
             ))}
           </select>
-        </label>
-        <label>
-          Article Image URL (optional):
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Article Image URL (optional):</label>
           <input
             type="url"
+            className="form-control form-control-sm"
             value={articleImgUrl}
             onChange={(e) => setArticleImgUrl(e.target.value)}
           />
-        </label>
-        <input
-          type="submit"
-          className={"btn btn-sm btn-outline-secondary"}
-          value="Submit Article"
-          disabled={loading}
-        ></input>
-      </form>
+        </div>
 
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="text-center">
+          <input
+            type="submit"
+            className="btn btn-sm btn-outline-secondary w-auto" // Small width button
+            value="Submit Article"
+            disabled={loading}
+          />
+        </div>
+
+        {successMessage && <p className="text-success mt-3">{successMessage}</p>}
+        {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
+      </form>
     </div>
   );
 };

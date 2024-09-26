@@ -72,10 +72,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .container {
-  margin-top: 100px; 
   padding: 0;
 }
-
 
 @media screen and (max-width: 768px) {
   .container {
@@ -550,10 +548,11 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 .article-form-container {
   max-width: 600px;
-  margin: 20;
+  margin: 20px;
+  padding: 20px;
 }
 
-label {
+/* label {
   display: block;
   margin: 10px 0;
 }
@@ -585,4 +584,4 @@ button:disabled {
 .error-message {
   color: red;
   margin-top: 10px;
-}
+} */
