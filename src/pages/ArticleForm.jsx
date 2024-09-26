@@ -57,12 +57,12 @@ export default () => {
   return (
     <div
       className="d-flex justify-content-center align-items-center"
-      style={{ height: "100vh" }} // Full viewport height for centering
+      // style={{ height: "100vh" }}
     >
       <form
         onSubmit={handleSubmit}
         className="border p-4 rounded shadow-sm"
-        style={{ width: "100%", maxWidth: "400px" }} // Limit the form width
+        style={{ width: "100%", maxWidth: "600px" }} 
       >
         <div className="mb-3">
           <label className="form-label">Title:</label>
@@ -82,7 +82,7 @@ export default () => {
             value={body}
             onChange={(e) => setBody(e.target.value)}
             required
-            style={{ minHeight: "150px" }} // Larger height for the body textarea
+            style={{ minHeight: "250px" }} 
           ></textarea>
         </div>
 
@@ -116,7 +116,7 @@ export default () => {
         <div className="text-center">
           <input
             type="submit"
-            className="btn btn-sm btn-outline-secondary w-auto" // Small width button
+            className="btn btn-sm btn-outline-secondary w-auto" 
             value="Submit Article"
             disabled={loading}
           />
