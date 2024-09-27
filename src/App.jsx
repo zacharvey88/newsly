@@ -9,6 +9,7 @@ import TopicPage from './pages/TopicPage';
 import Footer from './components/Footer';
 import NotFound from './pages/NotFound';
 import ArticleForm from './pages/ArticleForm';
+import UserDashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route exact path="/:topic/articles" element={<TopicPage />}></Route>
             <Route exact path="/login" element={<Login />}></Route>
             <Route exact path="/new-article" element={<ArticleForm />}></Route>
+            <Route exact path="/dashboard" element={<UserDashboard />}></Route>
           </Routes>
         </div>
         <Footer />

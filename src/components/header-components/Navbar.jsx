@@ -61,7 +61,7 @@ export default () => {
                 />
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => navigate(`/users/${user.username}/dashboard`)}>Dashboard</DropdownItem>
+                <DropdownItem onClick={() => navigate(`/dashboard`)}>Dashboard</DropdownItem>
                 <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
               </DropdownMenu>
             </Dropdown>

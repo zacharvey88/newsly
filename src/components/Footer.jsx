@@ -2,7 +2,7 @@ import icon from "../assets/newsly-icon.png"
 
 export default () => {
   return (
-    <footer className="py-5 text-center text-body-secondary bg-body-tertiary footer">
+    <footer className="text-center text-body-secondary bg-body-tertiary footer">
       <p className="mb-0">
         <a href="#">Back to top</a>
       </p>
