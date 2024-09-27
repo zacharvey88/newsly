@@ -32,7 +32,7 @@ export default function UserDashboard() {
   const fetchUserComments = async () => {
     try {
       const response = await axios.get(
-        `https://nc-news-ngma.onrender.com/api/comments?author=${user.username}`
+        `https://nc-news-ngma.onrender.com/api/users/${user.username}/comments`
       );
       setComments(response.data.comments);
     } catch (error) {
