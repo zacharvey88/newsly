@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/User";
-import LoadingScreen from "../utilities/LoadingScreen";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import {LoadingScreen} from "../utilities/LoadingScreen";
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
@@ -60,82 +62,107 @@ export default function UserDashboard() {
   };
 
   const handleEditArticle = (articleId) => {
-
+    // handle edit functionality here
   };
 
   const handleEditComment = (commentId) => {
-
+    // handle edit functionality here
   };
 
-  if (loading) return <LoadingScreen />;
+  if (loading) return <LoadingScreen / >;
 
   return (
-    <div className="container">
+    <div className="container dashboard-container">
       <div className="row justify-content-center">
-        <div className="col-md-8">
-
+        <div className="col-lg-10">
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
-          <div className="card mb-4">
-            <div className="card-header">
-              <h4>Your Articles</h4>
+          <div className="row">
+            {/* Articles Section */}
+            <div className="col-md-6 mb-4">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Your Articles</h4>
+                </div>
+                <ul className="list-group list-group-flush">
+                  {articles.length > 0 ? (
+                    articles.map((article) => (
+                      <li key={article.article_id} className="list-group-item">
+                        {/* Article Topic and Date */}
+                        <div className="article-meta mb-1">
+                          <span>[{article.topic}]</span>{" "}
+                          <span>Written on {moment(article.created_at).format("DD MMM YYYY")}</span>
+                        </div>
+                        {/* Article Title */}
+                        <Link to={`/articles/${article.article_id}`} className="article-title">
+                          {article.title}
+                        </Link>
+                        {/* Edit and Delete Buttons */}
+                        <div className="mt-2 d-flex justify-content-end">
+                          <button
+                            className="btn btn-sm btn-outline-primary me-2"
+                            onClick={() => handleEditArticle(article.article_id)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleDeleteArticle(article.article_id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-group-item">You haven't written any articles yet.</li>
+                  )}
+                </ul>
+              </div>
             </div>
-            <ul className="list-group list-group-flush">
-              {articles.length > 0 ? (
-                articles.map((article) => (
-                  <li key={article.article_id} className="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{article.title}</span>
-                    <div>
-                      <button
-                        className="btn btn-sm btn-outline-primary me-2"
-                        onClick={() => handleEditArticle(article.article_id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleDeleteArticle(article.article_id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="list-group-item">You haven't written any articles yet.</li>
-              )}
-            </ul>
-          </div>
 
-          <div className="card mb-4">
-            <div className="card-header">
-              <h4>Your Comments</h4>
+            {/* Comments Section */}
+            <div className="col-md-6 mb-4">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Your Comments</h4>
+                </div>
+                <ul className="list-group list-group-flush">
+                  {comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <li key={comment.comment_id} className="list-group-item">
+                        {/* Comment Date and Article */}
+                        <div className="comment-meta mb-1">
+                          <span>Commented on {moment(comment.created_at).format("DD MMM YYYY")}</span>{" "}
+                          <Link to={`/articles/${comment.article_id}`} className="article-name">
+                            in {comment.article_title}
+                          </Link>
+                        </div>
+                        {/* Comment Body */}
+                        <span>{comment.body}</span>
+                        {/* Edit and Delete Buttons */}
+                        <div className="mt-2 d-flex justify-content-end">
+                          <button
+                            className="btn btn-sm btn-outline-primary me-2"
+                            onClick={() => handleEditComment(comment.comment_id)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleDeleteComment(comment.comment_id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-group-item">You haven't left any comments yet.</li>
+                  )}
+                </ul>
+              </div>
             </div>
-            <ul className="list-group list-group-flush">
-              {comments.length > 0 ? (
-                comments.map((comment) => (
-                  <li key={comment.comment_id} className="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{comment.body}</span>
-                    <div>
-                      <button
-                        className="btn btn-sm btn-outline-primary me-2"
-                        onClick={() => handleEditComment(comment.comment_id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleDeleteComment(comment.comment_id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="list-group-item">You haven't left any comments yet.</li>
-              )}
-            </ul>
           </div>
         </div>
       </div>
