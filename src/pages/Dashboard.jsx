@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/User";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import {LoadingScreen} from "../utilities/LoadingScreen";
+import LoadingScreen from "../utilities/LoadingScreen";
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
