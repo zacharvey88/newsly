@@ -86,7 +86,7 @@ export default () => {
                   </div>
                   <a
                     className="badge bg-secondary text-decoration-none link-light"
-                    href="#!"
+                    href={`https://zacharvey-newsly.netlify.app/${article.topic}/articles`}
                   >
                     {article.topic}
                   </a>

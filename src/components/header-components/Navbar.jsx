@@ -37,7 +37,7 @@ export default () => {
               </DropdownItem>
               {user.username && (
                 <DropdownItem>
-                  <Link to="/write-article">Submit an article</Link>
+                  <Link to="/new-article">Submit an article</Link>
                 </DropdownItem>
               )}
             </DropdownMenu>
