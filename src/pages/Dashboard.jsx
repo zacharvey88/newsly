@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/User";
+import LoadingScreen from "../utilities/LoadingScreen";
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
@@ -66,7 +67,7 @@ export default function UserDashboard() {
 
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="container">
