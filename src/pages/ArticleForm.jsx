@@ -97,7 +97,7 @@ export default () => {
             <option value="">Select a topic</option>
             {topics.map((topicItem) => (
               <option key={topicItem.slug} value={topicItem.slug}>
-                {topicItem.slug}
+                {topicItem.slug.toUpperCase()}
               </option>
             ))}
           </select>
