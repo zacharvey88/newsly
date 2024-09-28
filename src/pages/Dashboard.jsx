@@ -59,11 +59,11 @@ export default function UserDashboard() {
   };
 
   const handleEditArticle = (articleId) => {
-    // Logic for editing the article, e.g., navigating to an edit form
+
   };
 
   const handleEditComment = (commentId) => {
-    // Logic for editing the comment
+
   };
 
   if (loading) return <p>Loading...</p>;
@@ -72,7 +72,6 @@ export default function UserDashboard() {
     <div className="container">
       <div className="row justify-content-center">
         <div className="col-md-8">
-          <h2 className="text-center mb-4">Your Dashboard</h2>
 
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
@@ -102,7 +101,7 @@ export default function UserDashboard() {
                   </li>
                 ))
               ) : (
-                <li className="list-group-item">You haven't authored any articles yet.</li>
+                <li className="list-group-item">You haven't written any articles yet.</li>
               )}
             </ul>
           </div>

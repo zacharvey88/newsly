@@ -13,23 +13,24 @@ import UserDashboard from './pages/Dashboard';
 
 function App() {
   return (
-      <div>
-        <Header />
-        <div className="container">
-          <Routes>
-            <Route path="*" element={<NotFound/>}></Route>
-            <Route path="/not-found" element={<NotFound/>}></Route>
-            <Route exact path="/" element={<Home />}></Route>
-            <Route exact path="/articles/:article_id" element={<ArticlePage />}></Route>
-            <Route exact path="/:topic/articles" element={<TopicPage />}></Route>
-            <Route exact path="/login" element={<Login />}></Route>
-            <Route exact path="/new-article" element={<ArticleForm />}></Route>
-            <Route exact path="/dashboard" element={<UserDashboard />}></Route>
-          </Routes>
-        </div>
-        <Footer />
+    <div className="app-container">
+      <Header />
+      <div className="content-container">
+        <Routes>
+          <Route path="*" element={<NotFound />} />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/articles/:article_id" element={<ArticlePage />} />
+          <Route exact path="/:topic/articles" element={<TopicPage />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/new-article" element={<ArticleForm />} />
+          <Route exact path="/dashboard" element={<UserDashboard />} />
+        </Routes>
       </div>
+      <Footer />
+    </div>
   );
 }
+
 
 export default App;
