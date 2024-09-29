@@ -52,50 +52,38 @@ export default function UserDashboard() {
   };
 
   const handleDeleteArticle = async (articleId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this article?");
-    if (confirmed) {
-      try {
-        await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
-        setArticles(articles.filter((article) => article.article_id !== articleId));
-      } catch (error) {
-        setErrorMessage("Error deleting article.");
-      }
+    try {
+      await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
+      setArticles(articles.filter((article) => article.article_id !== articleId));
+    } catch (error) {
+      setErrorMessage("Error deleting article.");
     }
   };
 
   const handleDeleteAllArticles = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete all articles?");
-    if (confirmed) {
-      try {
-        await Promise.all(articles.map(article => axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)));
-        setArticles([]);
-      } catch (error) {
-        setErrorMessage("Error deleting all articles.");
-      }
+    try {
+      await Promise.all(articles.map(article => axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)));
+      setArticles([]);
+    } catch (error) {
+      setErrorMessage("Error deleting all articles.");
     }
   };
 
   const handleDeleteComment = async (commentId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this comment?");
-    if (confirmed) {
-      try {
-        await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
-        setComments(comments.filter((comment) => comment.comment_id !== commentId));
-      } catch (error) {
-        setErrorMessage("Error deleting comment.");
-      }
+    try {
+      await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
+      setComments(comments.filter((comment) => comment.comment_id !== commentId));
+    } catch (error) {
+      setErrorMessage("Error deleting comment.");
     }
   };
 
   const handleDeleteAllComments = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete all comments?");
-    if (confirmed) {
-      try {
-        await Promise.all(comments.map(comment => axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)));
-        setComments([]);
-      } catch (error) {
-        setErrorMessage("Error deleting all comments.");
-      }
+    try {
+      await Promise.all(comments.map(comment => axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)));
+      setComments([]);
+    } catch (error) {
+      setErrorMessage("Error deleting all comments.");
     }
   };
 
