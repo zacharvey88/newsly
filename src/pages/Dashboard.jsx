@@ -148,7 +148,7 @@ export default function UserDashboard() {
                         className="btn btn-secondary btn-sm dropdown-toggle"
                         style={{ fontSize: '0.8rem' }}
                         type="button"
-                        id="articleSortDropdown"
+                        id="articleSortDropdown"  
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
@@ -159,7 +159,7 @@ export default function UserDashboard() {
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('title')}>Title {articleSortBy === 'title' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('topic')}>Topic {articleSortBy === 'topic' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('like_count')}>Likes {articleSortBy === 'like_count' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('votes')}>Likes {articleSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
                         <div className="dropdown-divider"></div>
                         <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending {articleSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
@@ -183,13 +183,14 @@ export default function UserDashboard() {
                         </div>
                         {/* Article Title (no link) */}
                         <div className="article-title">{article.title}</div>
+                        <div className="article-preview text-muted small">{article.body.slice(0, 100)}...</div>
                         {/* Comment and Like Count */}
                         <div className="d-flex justify-content-end align-items-center">
                           <span className="me-3">
                             <i className="fas fa-comments"></i> {article.comment_count} 
                           </span>
                           <span className="me-3">
-                            <i className="fas fa-thumbs-up"></i> {article.like_count}
+                            <i className="fas fa-thumbs-up"></i> {article.votes}
                           </span>
                         </div>
                         {/* Edit and Delete Icons */}
@@ -249,7 +250,7 @@ export default function UserDashboard() {
                       </button>
                       <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
                         <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date {commentSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('like_count')}>Likes {commentSortBy === 'like_count' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('votes')}>Likes {commentSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
                         <div className="dropdown-divider"></div>
                         <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending {commentSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending {commentSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
@@ -270,7 +271,7 @@ export default function UserDashboard() {
                         {/* Like Count */}
                         <div className="d-flex justify-content-end align-items-center">
                           <span>
-                            <i className="fas fa-thumbs-up"></i> {comment.like_count}
+                            <i className="fas fa-thumbs-up"></i> {comment.votes}
                           </span>
                         </div>
                         {/* Delete Icon */}
