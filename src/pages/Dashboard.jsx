@@ -12,6 +12,11 @@ export default function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [articleSortBy, setArticleSortBy] = useState('created_at');
+  const [articleSortOrder, setArticleSortOrder] = useState('desc');
+  const [commentSortBy, setCommentSortBy] = useState('created_at');
+  const [commentSortOrder, setCommentSortOrder] = useState('desc');
+
   useEffect(() => {
     if (user) {
       fetchUserArticles();
@@ -62,14 +67,34 @@ export default function UserDashboard() {
   };
 
   const handleEditArticle = (articleId) => {
-    // handle edit functionality here
+
   };
 
   const handleEditComment = (commentId) => {
-    // handle edit functionality here
+ 
   };
 
-  if (loading) return <LoadingScreen / >;
+  const sortArticles = (articles) => {
+    return [...articles].sort((a, b) => {
+      if (articleSortOrder === 'asc') {
+        return a[articleSortBy] > b[articleSortBy] ? 1 : -1;
+      } else {
+        return a[articleSortBy] < b[articleSortBy] ? 1 : -1;
+      }
+    });
+  };
+
+  const sortComments = (comments) => {
+    return [...comments].sort((a, b) => {
+      if (commentSortOrder === 'asc') {
+        return a[commentSortBy] > b[commentSortBy] ? 1 : -1;
+      } else {
+        return a[commentSortBy] < b[commentSortBy] ? 1 : -1;
+      }
+    });
+  };
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="container dashboard-container">
@@ -81,17 +106,36 @@ export default function UserDashboard() {
             {/* Articles Section */}
             <div className="col-md-6 mb-4">
               <div className="card">
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-secondary dropdown-toggle"
+                      type="button"
+                      id="articleSortDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Sort By
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
+                      <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date</button></li>
+                      <li><button className="dropdown-item" onClick={() => setArticleSortBy('title')}>Title</button></li>
+                      <li><button className="dropdown-item" onClick={() => setArticleSortBy('topic')}>Topic</button></li>
+                      <div className="dropdown-divider"></div>
+                      <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending</button></li>
+                      <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending</button></li>
+                    </ul>
+                  </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {articles.length > 0 ? (
-                    articles.map((article) => (
+                  {sortArticles(articles).length > 0 ? (
+                    sortArticles(articles).map((article) => (
                       <li key={article.article_id} className="list-group-item">
                         {/* Article Topic and Date */}
-                        <div className="article-meta mb-1">
-                          <span className="badge bg-secondary text-decoration-none">{article.topic}</span>
-                          <span>Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
+                        <div className="article-meta mb-1" >
+                          <span className="badge bg-secondary text-decoration-none me-3">{article.topic}</span>
+                          <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
                         </div>
                         {/* Article Title */}
                         <Link to={`/articles/${article.article_id}`} className="article-title">
@@ -124,12 +168,30 @@ export default function UserDashboard() {
             {/* Comments Section */}
             <div className="col-md-6 mb-4">
               <div className="card">
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-secondary dropdown-toggle"
+                      type="button"
+                      id="commentSortDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Sort By
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
+                      <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date</button></li>
+                      <li><button className="dropdown-item" onClick={() => setCommentSortBy('article_id')}>Article</button></li>
+                      <div className="dropdown-divider"></div>
+                      <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending</button></li>
+                      <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending</button></li>
+                    </ul>
+                  </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {comments.length > 0 ? (
-                    comments.map((comment) => (
+                  {sortComments(comments).length > 0 ? (
+                    sortComments(comments).map((comment) => (
                       <li key={comment.comment_id} className="list-group-item">
                         {/* Comment Date and Article */}
                         <div className="comment-meta mb-1">

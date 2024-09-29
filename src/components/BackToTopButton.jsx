@@ -5,7 +5,7 @@ export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
-    if (window.scrollY > 300) {
+    if (window.scrollY > 500) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -43,11 +43,11 @@ export default function BackToTop() {
 
 const backToTopStyles = {
   position: "fixed",
-  bottom: "40px",
-  right: "40px",
+  bottom: "80px",
+  right: "60px",
   backgroundColor: "#345284",
   color: "#fff",
-  padding: "10px 15px",
+  padding: "10px 10px",
   borderRadius: "50%",
   cursor: "pointer",
   fontSize: "24px",
