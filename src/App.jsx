@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import NotFound from './pages/NotFound';
 import ArticleForm from './pages/ArticleForm';
 import UserDashboard from './pages/Dashboard';
+import BackToTop from './components/BackToTopButton';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
+      <BackToTop/>
     </div>
   );
 }
