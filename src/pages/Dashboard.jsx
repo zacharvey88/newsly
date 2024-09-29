@@ -52,50 +52,38 @@ export default function UserDashboard() {
   };
 
   const handleDeleteArticle = async (articleId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this article?");
-    if (confirmed) {
-      try {
-        await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
-        setArticles(articles.filter((article) => article.article_id !== articleId));
-      } catch (error) {
-        setErrorMessage("Error deleting article.");
-      }
+    try {
+      await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
+      setArticles(articles.filter((article) => article.article_id !== articleId));
+    } catch (error) {
+      setErrorMessage("Error deleting article.");
     }
   };
 
   const handleDeleteAllArticles = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete all articles?");
-    if (confirmed) {
-      try {
-        await Promise.all(articles.map(article => axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)));
-        setArticles([]);
-      } catch (error) {
-        setErrorMessage("Error deleting all articles.");
-      }
+    try {
+      await Promise.all(articles.map(article => axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)));
+      setArticles([]);
+    } catch (error) {
+      setErrorMessage("Error deleting all articles.");
     }
   };
 
   const handleDeleteComment = async (commentId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this comment?");
-    if (confirmed) {
-      try {
-        await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
-        setComments(comments.filter((comment) => comment.comment_id !== commentId));
-      } catch (error) {
-        setErrorMessage("Error deleting comment.");
-      }
+    try {
+      await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
+      setComments(comments.filter((comment) => comment.comment_id !== commentId));
+    } catch (error) {
+      setErrorMessage("Error deleting comment.");
     }
   };
 
   const handleDeleteAllComments = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete all comments?");
-    if (confirmed) {
-      try {
-        await Promise.all(comments.map(comment => axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)));
-        setComments([]);
-      } catch (error) {
-        setErrorMessage("Error deleting all comments.");
-      }
+    try {
+      await Promise.all(comments.map(comment => axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)));
+      setComments([]);
+    } catch (error) {
+      setErrorMessage("Error deleting all comments.");
     }
   };
 
@@ -147,8 +135,38 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
+                  <p>Total Articles: {articles.length}</p>
+                  <div className="d-flex align-items-center">
+                    <button
+                      className="btn btn-outline-danger btn-sm me-3"
+                      onClick={handleDeleteAllArticles}
+                    >
+                      Delete All
+                    </button>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        style={{ fontSize: '0.8rem' }}
+                        type="button"
+                        id="articleSortDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Sort By
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date {articleSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('title')}>Title {articleSortBy === 'title' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('topic')}>Topic {articleSortBy === 'topic' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('like_count')}>Likes {articleSortBy === 'like_count' && <i className="fas fa-check"></i>}</button></li>
+                        <div className="dropdown-divider"></div>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending {articleSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-muted small">Total Articles: {articles.length}</p>
                 <ul className="list-group list-group-flush">
                   {sortArticles(articles).slice(0, articleDisplayCount).length > 0 ? (
                     sortArticles(articles).slice(0, articleDisplayCount).map((article) => (
@@ -163,16 +181,15 @@ export default function UserDashboard() {
                             <i className="fas fa-link"></i>
                           </Link>
                         </div>
-                        {/* Article Title and Preview */}
-                        <div className="article-title mb-1">{article.title}</div>
-                        <div className="article-preview text-muted small">{article.body.slice(0, 100)}...</div>
-                        {/* Votes and Comment Count */}
-                        <div className="d-flex justify-content-end align-items-center mt-2">
+                        {/* Article Title (no link) */}
+                        <div className="article-title">{article.title}</div>
+                        {/* Comment and Like Count */}
+                        <div className="d-flex justify-content-end align-items-center">
                           <span className="me-3">
-                            <i className="fas fa-thumbs-up"></i> {article.vote_count} votes
+                            <i className="fas fa-comments"></i> {article.comment_count} 
                           </span>
                           <span className="me-3">
-                            <i className="fas fa-comments"></i> {article.comment_count} comments
+                            <i className="fas fa-thumbs-up"></i> {article.like_count}
                           </span>
                         </div>
                         {/* Edit and Delete Icons */}
@@ -211,8 +228,35 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
+                  <p>Total Comments: {comments.length}</p>
+                  <div className="d-flex align-items-center">
+                    <button
+                      className="btn btn-outline-danger btn-sm me-3"
+                      onClick={handleDeleteAllComments}
+                    >
+                      Delete All
+                    </button>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        style={{ fontSize: '0.8rem' }}
+                        type="button"
+                        id="commentSortDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Sort By
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date {commentSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('like_count')}>Likes {commentSortBy === 'like_count' && <i className="fas fa-check"></i>}</button></li>
+                        <div className="dropdown-divider"></div>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending {commentSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending {commentSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-muted small">Total Comments: {comments.length}</p>
                 <ul className="list-group list-group-flush">
                   {sortComments(comments).slice(0, commentDisplayCount).length > 0 ? (
                     sortComments(comments).slice(0, commentDisplayCount).map((comment) => (
@@ -223,10 +267,10 @@ export default function UserDashboard() {
                           </span>
                         </div>
                         <div className="comment-body">{comment.body}</div>
-                        {/* Votes Count */}
+                        {/* Like Count */}
                         <div className="d-flex justify-content-end align-items-center">
                           <span>
-                            <i className="fas fa-thumbs-up"></i> {comment.vote_count} votes
+                            <i className="fas fa-thumbs-up"></i> {comment.like_count}
                           </span>
                         </div>
                         {/* Delete Icon */}
