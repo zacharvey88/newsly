@@ -90,8 +90,8 @@ export default function UserDashboard() {
                       <li key={article.article_id} className="list-group-item">
                         {/* Article Topic and Date */}
                         <div className="article-meta mb-1">
-                          <span>[{article.topic}]</span>{" "}
-                          <span>Written on {moment(article.created_at).format("DD MMM YYYY")}</span>
+                          <span className="badge bg-secondary text-decoration-none">{article.topic}</span>
+                          <span>Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
                         </div>
                         {/* Article Title */}
                         <Link to={`/articles/${article.article_id}`} className="article-title">
@@ -133,7 +133,7 @@ export default function UserDashboard() {
                       <li key={comment.comment_id} className="list-group-item">
                         {/* Comment Date and Article */}
                         <div className="comment-meta mb-1">
-                          <span>Commented on {moment(comment.created_at).format("DD MMM YYYY")}</span>{" "}
+                          <span>Posted on {moment(comment.created_at).format("DD MMM YYYY")}</span>{" "}
                           <Link to={`/articles/${comment.article_id}`} className="article-name">
                             in {comment.article_title}
                           </Link>
