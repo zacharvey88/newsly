@@ -17,6 +17,9 @@ export default function UserDashboard() {
   const [commentSortBy, setCommentSortBy] = useState('created_at');
   const [commentSortOrder, setCommentSortOrder] = useState('desc');
 
+  const [articleDisplayCount, setArticleDisplayCount] = useState(10);
+  const [commentDisplayCount, setCommentDisplayCount] = useState(10);
+
   useEffect(() => {
     if (user) {
       fetchUserArticles();
@@ -57,6 +60,15 @@ export default function UserDashboard() {
     }
   };
 
+  const handleDeleteAllArticles = async () => {
+    try {
+      await Promise.all(articles.map(article => axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)));
+      setArticles([]);
+    } catch (error) {
+      setErrorMessage("Error deleting all articles.");
+    }
+  };
+
   const handleDeleteComment = async (commentId) => {
     try {
       await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
@@ -66,12 +78,21 @@ export default function UserDashboard() {
     }
   };
 
-  const handleEditArticle = (articleId) => {
-
+  const handleDeleteAllComments = async () => {
+    try {
+      await Promise.all(comments.map(comment => axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)));
+      setComments([]);
+    } catch (error) {
+      setErrorMessage("Error deleting all comments.");
+    }
   };
 
-  const handleEditComment = (commentId) => {
- 
+  const loadMoreArticles = () => {
+    setArticleDisplayCount(articleDisplayCount + 10);
+  };
+
+  const loadMoreComments = () => {
+    setCommentDisplayCount(commentDisplayCount + 10);
   };
 
   const sortArticles = (articles) => {
@@ -94,6 +115,12 @@ export default function UserDashboard() {
     });
   };
 
+  useEffect(() => {
+    if (!user) {
+      window.location.href = '/login'; // Redirect to login if user logs out
+    }
+  }, [user]);
+
   if (loading) return <LoadingScreen />;
 
   return (
@@ -108,60 +135,91 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
-                  <div className="dropdown">
+                  <p>Total Articles: {articles.length}</p>
+                  <div className="d-flex align-items-center">
                     <button
-                      className="btn btn-secondary dropdown-toggle"
-                      type="button"
-                      id="articleSortDropdown"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                      className="btn btn-outline-danger btn-sm me-3"
+                      onClick={handleDeleteAllArticles}
                     >
-                      Sort By
+                      Delete All
                     </button>
-                    <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
-                      <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date</button></li>
-                      <li><button className="dropdown-item" onClick={() => setArticleSortBy('title')}>Title</button></li>
-                      <li><button className="dropdown-item" onClick={() => setArticleSortBy('topic')}>Topic</button></li>
-                      <div className="dropdown-divider"></div>
-                      <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending</button></li>
-                      <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending</button></li>
-                    </ul>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        style={{ fontSize: '0.8rem' }}
+                        type="button"
+                        id="articleSortDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Sort By
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date {articleSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('title')}>Title {articleSortBy === 'title' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('topic')}>Topic {articleSortBy === 'topic' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('like_count')}>Likes {articleSortBy === 'like_count' && <i className="fas fa-check"></i>}</button></li>
+                        <div className="dropdown-divider"></div>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending {articleSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {sortArticles(articles).length > 0 ? (
-                    sortArticles(articles).map((article) => (
+                  {sortArticles(articles).slice(0, articleDisplayCount).length > 0 ? (
+                    sortArticles(articles).slice(0, articleDisplayCount).map((article) => (
                       <li key={article.article_id} className="list-group-item">
-                        {/* Article Topic and Date */}
-                        <div className="article-meta mb-1" >
-                          <span className="badge bg-secondary text-decoration-none me-3">{article.topic}</span>
-                          <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
+                        {/* Article Topic and Date with Link Icon */}
+                        <div className="article-meta mb-1 d-flex justify-content-between align-items-center">
+                          <div>
+                            <span className="badge bg-secondary text-decoration-none me-3">{article.topic}</span>
+                            <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
+                          </div>
+                          <Link to={`/articles/${article.article_id}`} className="ms-auto">
+                            <i className="fas fa-link"></i>
+                          </Link>
                         </div>
-                        {/* Article Title */}
-                        <Link to={`/articles/${article.article_id}`} className="article-title">
-                          {article.title}
-                        </Link>
-                        {/* Edit and Delete Buttons */}
+                        {/* Article Title (no link) */}
+                        <div className="article-title">{article.title}</div>
+                        {/* Comment and Like Count */}
+                        <div className="d-flex justify-content-end align-items-center">
+                          <span className="me-3">
+                            <i className="fas fa-comments"></i> {article.comment_count} 
+                          </span>
+                          <span className="me-3">
+                            <i className="fas fa-thumbs-up"></i> {article.like_count}
+                          </span>
+                        </div>
+                        {/* Edit and Delete Icons */}
                         <div className="mt-2 d-flex justify-content-end">
                           <button
                             className="btn btn-sm btn-outline-primary me-2"
                             onClick={() => handleEditArticle(article.article_id)}
                           >
-                            Edit
+                            <i className="fas fa-edit"></i>
                           </button>
                           <button
                             className="btn btn-sm btn-outline-danger"
                             onClick={() => handleDeleteArticle(article.article_id)}
                           >
-                            Delete
+                            <i className="fas fa-trash"></i>
                           </button>
                         </div>
                       </li>
                     ))
                   ) : (
-                    <li className="list-group-item">You haven't written any articles yet.</li>
+                    <li className="list-group-item">No articles available</li>
                   )}
                 </ul>
+                {articles.length > articleDisplayCount && (
+                  <div className="card-footer">
+                    <button className="btn btn-primary btn-sm" onClick={loadMoreArticles}>
+                      Show More
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -170,59 +228,73 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
-                  <div className="dropdown">
+                  <p>Total Comments: {comments.length}</p>
+                  <div className="d-flex align-items-center">
                     <button
-                      className="btn btn-secondary dropdown-toggle"
-                      type="button"
-                      id="commentSortDropdown"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                      className="btn btn-outline-danger btn-sm me-3"
+                      onClick={handleDeleteAllComments}
                     >
-                      Sort By
+                      Delete All
                     </button>
-                    <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
-                      <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date</button></li>
-                      <li><button className="dropdown-item" onClick={() => setCommentSortBy('article_id')}>Article</button></li>
-                      <div className="dropdown-divider"></div>
-                      <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending</button></li>
-                      <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending</button></li>
-                    </ul>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        style={{ fontSize: '0.8rem' }}
+                        type="button"
+                        id="commentSortDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Sort By
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date {commentSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('like_count')}>Likes {commentSortBy === 'like_count' && <i className="fas fa-check"></i>}</button></li>
+                        <div className="dropdown-divider"></div>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending {commentSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending {commentSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {sortComments(comments).length > 0 ? (
-                    sortComments(comments).map((comment) => (
+                  {sortComments(comments).slice(0, commentDisplayCount).length > 0 ? (
+                    sortComments(comments).slice(0, commentDisplayCount).map((comment) => (
                       <li key={comment.comment_id} className="list-group-item">
-                        {/* Comment Date and Article */}
-                        <div className="comment-meta mb-1">
-                          <span>Posted on {moment(comment.created_at).format("DD MMM YYYY")}</span>{" "}
-                          <Link to={`/articles/${comment.article_id}`} className="article-name">
-                            in {comment.article_title}
-                          </Link>
+                        <div className="comment-meta mb-1 d-flex justify-content-between align-items-center">
+                          <span className="text-muted small">
+                            {moment(comment.created_at).format("DD MMM YYYY")} on Article: <Link to={`/articles/${comment.article_id}`}>{comment.article_title}</Link>
+                          </span>
                         </div>
-                        {/* Comment Body */}
-                        <span>{comment.body}</span>
-                        {/* Edit and Delete Buttons */}
+                        <div className="comment-body">{comment.body}</div>
+                        {/* Like Count */}
+                        <div className="d-flex justify-content-end align-items-center">
+                          <span>
+                            <i className="fas fa-thumbs-up"></i> {comment.like_count}
+                          </span>
+                        </div>
+                        {/* Delete Icon */}
                         <div className="mt-2 d-flex justify-content-end">
-                          <button
-                            className="btn btn-sm btn-outline-primary me-2"
-                            onClick={() => handleEditComment(comment.comment_id)}
-                          >
-                            Edit
-                          </button>
                           <button
                             className="btn btn-sm btn-outline-danger"
                             onClick={() => handleDeleteComment(comment.comment_id)}
                           >
-                            Delete
+                            <i className="fas fa-trash"></i>
                           </button>
                         </div>
                       </li>
                     ))
                   ) : (
-                    <li className="list-group-item">You haven't left any comments yet.</li>
+                    <li className="list-group-item">No comments available</li>
                   )}
                 </ul>
+                {comments.length > commentDisplayCount && (
+                  <div className="card-footer">
+                    <button className="btn btn-primary btn-sm" onClick={loadMoreComments}>
+                      Show More
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
