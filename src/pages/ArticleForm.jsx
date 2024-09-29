@@ -57,7 +57,7 @@ export default () => {
   return (
     <div
       className="d-flex justify-content-center align-items-center p-4"
-      style={{ height: "100vh" }}
+      // style={{ height: "100vh" }}
     >
       <form
         onSubmit={handleSubmit}

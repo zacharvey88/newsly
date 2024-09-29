@@ -1,4 +1,4 @@
-# NEWSLY
+<img src="/assets/images/newsly-logo.png" width="300">
 
 Welcome to the Newsly, a web application built using React with Vite, communicating with a Node.js backend hosted on Render. This project is part of my software development bootcamp with Northcoders and builds on the backend which I previously built. You can view that repositry [here](https://github.com/zacharvey88/nc-news).
 
