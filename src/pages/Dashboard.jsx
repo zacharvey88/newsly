@@ -134,10 +134,7 @@ export default function UserDashboard() {
             <div className="col-md-6 mb-4">
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
-                  <div>
-                    <h4>Your Articles</h4>
-                    <p>Total Articles: {articles.length}</p>
-                  </div>
+                  <h4>Your Articles</h4>
                   <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
@@ -150,7 +147,7 @@ export default function UserDashboard() {
                         className="btn btn-secondary btn-sm dropdown-toggle"
                         style={{ fontSize: '0.8rem' }}
                         type="button"
-                        id="articleSortDropdown"  
+                        id="articleSortDropdown"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
@@ -180,7 +177,7 @@ export default function UserDashboard() {
                             <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
                           </div>
                           <Link to={`/articles/${article.article_id}`} className="ms-auto">
-                            <i className="fas fa-link"></i>
+                            <i className="fas fa-link" style={{ color: '#345284' }}></i>
                           </Link>
                         </div>
                         {/* Article Title (no link) */}
@@ -190,19 +187,13 @@ export default function UserDashboard() {
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
                             <span className="me-3">
-                              <i className="fas fa-comments"></i> {article.comment_count}
+                              <i className="fas fa-comments" style={{ color: '#345284' }}></i> {article.comment_count}
                             </span>
                             <span className="me-3">
-                              <i className="fas fa-thumbs-up"></i> {article.votes}
+                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {article.votes}
                             </span>
                           </div>
                           <div>
-                            <Link
-                              to={`/articles/${article.article_id}/edit`}
-                              className="btn btn-outline-secondary btn-sm me-2"
-                            >
-                              Edit
-                            </Link>
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => handleDeleteArticle(article.article_id)}
@@ -217,13 +208,14 @@ export default function UserDashboard() {
                     <li className="list-group-item">You haven't posted any articles yet.</li>
                   )}
                 </ul>
-                {articles.length > articleDisplayCount && (
-                  <div className="card-footer">
+                <div className="card-footer d-flex justify-content-between align-items-center">
+                  <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
+                  {articles.length > articleDisplayCount && (
                     <button className="btn btn-primary btn-sm" onClick={loadMoreArticles}>
                       Load More
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
 
@@ -231,9 +223,7 @@ export default function UserDashboard() {
             <div className="col-md-6 mb-4">
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
-                  <div>
-                    <h4>Your Comments</h4>
-                  </div>
+                  <h4>Your Comments</h4>
                   <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
@@ -269,17 +259,23 @@ export default function UserDashboard() {
                         <div className="article-meta mb-1 d-flex justify-content-between align-items-center">
                           <span className="text-muted small">Posted on {moment(comment.created_at).format("DD MMM YYYY")}</span>
                           <Link to={`/articles/${comment.article_id}`} className="ms-auto">
-                            <i className="fas fa-link"></i>
+                            <i className="fas fa-link" style={{ color: '#345284' }}></i>
                           </Link>
                         </div>
                         <div className="article-preview text-muted small">{comment.body}</div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
                             <span className="me-3">
-                              <i className="fas fa-thumbs-up"></i> {comment.votes}
+                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {comment.votes}
                             </span>
                           </div>
                           <div>
+                            <button
+                              className="btn btn-outline-secondary btn-sm me-2"
+                              onClick={() => handleEditComment(comment.comment_id)}
+                            >
+                              Edit
+                            </button>
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => handleDeleteComment(comment.comment_id)}
@@ -294,13 +290,14 @@ export default function UserDashboard() {
                     <li className="list-group-item">You haven't posted any comments yet.</li>
                   )}
                 </ul>
-                {comments.length > commentDisplayCount && (
-                  <div className="card-footer">
+                <div className="card-footer d-flex justify-content-between align-items-center">
+                  <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
+                  {comments.length > commentDisplayCount && (
                     <button className="btn btn-primary btn-sm" onClick={loadMoreComments}>
                       Load More
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
