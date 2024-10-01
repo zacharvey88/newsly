@@ -20,6 +20,15 @@ export default function UserDashboard() {
   const [articleDisplayCount, setArticleDisplayCount] = useState(10);
   const [commentDisplayCount, setCommentDisplayCount] = useState(10);
 
+  const [editMode, setEditMode] = useState(false);
+  const [currentEdit, setCurrentEdit] = useState(null);
+
+  const [editContent, setEditContent] = useState({
+    title: '',
+    body: '',
+    article_img_url: ''
+  });
+
   useEffect(() => {
     if (user) {
       fetchUserArticles();
@@ -115,6 +124,42 @@ export default function UserDashboard() {
     });
   };
 
+  const handleEditArticle = (article) => {
+    setEditMode(true);
+    setCurrentEdit(article);
+    setEditContent({
+      title: article.title,
+      body: article.body,
+      article_img_url: article.article_img_url
+    });
+  };
+
+  const handleEditComment = (comment) => {
+    setEditMode(true);
+    setCurrentEdit(comment);
+    setEditContent({
+      body: comment.body
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      if (currentEdit.article_id) {
+        // Save edited article
+        await axios.patch(`/api/articles/${currentEdit.article_id}`, editContent);
+        fetchUserArticles(); // Refresh articles after editing
+      } else if (currentEdit.comment_id) {
+        // Save edited comment
+        await axios.patch(`/api/comments/${currentEdit.comment_id}`, { body: editContent.body });
+        fetchUserComments(); // Refresh comments after editing
+      }
+      setEditMode(false);
+      setCurrentEdit(null);
+    } catch (error) {
+      setErrorMessage("Error saving changes.");
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       window.location.href = '/login'; 
@@ -125,6 +170,49 @@ export default function UserDashboard() {
 
   return (
     <div className="container dashboard-container">
+      {editMode && (
+        <div className="overlay">
+          <div className="edit-modal">
+            <h5>Edit {currentEdit.article_id ? "Article" : "Comment"}</h5>
+            <form>
+              {currentEdit.article_id && (
+                <>
+                  <div className="form-group">
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      value={editContent.title}
+                      onChange={(e) => setEditContent({ ...editContent, title: e.target.value })}
+                      className="form-control"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Image URL</label>
+                    <input
+                      type="text"
+                      value={editContent.article_img_url}
+                      onChange={(e) => setEditContent({ ...editContent, article_img_url: e.target.value })}
+                      className="form-control"
+                    />
+                  </div>
+                </>
+              )}
+              <div className="form-group">
+                <label>Body</label>
+                <textarea
+                  value={editContent.body}
+                  onChange={(e) => setEditContent({ ...editContent, body: e.target.value })}
+                  className="form-control"
+                  rows="5"
+                />
+              </div>
+              <button type="button" className="btn btn-primary mt-3" onClick={handleSaveEdit}>
+                Save
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
       <div className="row justify-content-center">
         <div className="col-lg-10">
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
@@ -135,29 +223,27 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
-                  <div className="d-flex align-items-center">
+                  <div className="d-flex align-items-center" style={{ height: '40px' }}>
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
                       onClick={handleDeleteAllArticles}
+                      style={{ height: '100%' }}
                     >
                       Delete All
                     </button>
                     <div className="dropdown">
                       <button
                         className="btn btn-secondary btn-sm dropdown-toggle"
-                        style={{ fontSize: '0.8rem' }}
                         type="button"
                         id="articleSortDropdown"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
+                        style={{ height: '100%' }}
                       >
                         Sort By
                       </button>
                       <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date {articleSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('title')}>Title {articleSortBy === 'title' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('topic')}>Topic {articleSortBy === 'topic' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('votes')}>Likes {articleSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
                         <div className="dropdown-divider"></div>
                         <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
@@ -170,30 +256,26 @@ export default function UserDashboard() {
                   {sortArticles(articles).slice(0, articleDisplayCount).length > 0 ? (
                     sortArticles(articles).slice(0, articleDisplayCount).map((article) => (
                       <li key={article.article_id} className="list-group-item">
-                        {/* Article Topic and Date with Link Icon */}
                         <div className="article-meta mb-1 d-flex justify-content-between align-items-center">
-                          <div>
-                            <span className="badge bg-secondary text-decoration-none me-3">{article.topic}</span>
-                            <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
-                          </div>
+                          <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
                           <Link to={`/articles/${article.article_id}`} className="ms-auto">
                             <i className="fas fa-link" style={{ color: '#345284' }}></i>
                           </Link>
                         </div>
-                        {/* Article Title (no link) */}
-                        <div className="article-title">{article.title}</div>
-                        <div className="article-preview text-muted small">{article.body.slice(0, 100)}...</div>
-                        {/* Comment and Like Count */}
+                        <div className="article-preview text-muted small">{article.body}</div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
-                            <span className="me-3">
-                              <i className="fas fa-comments" style={{ color: '#345284' }}></i> {article.comment_count}
-                            </span>
                             <span className="me-3">
                               <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {article.votes}
                             </span>
                           </div>
                           <div>
+                            <button
+                              className="btn btn-outline-secondary btn-sm me-2"
+                              onClick={() => handleEditArticle(article)}
+                            >
+                              Edit
+                            </button>
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => handleDeleteArticle(article.article_id)}
@@ -211,9 +293,9 @@ export default function UserDashboard() {
                 <div className="card-footer d-flex justify-content-between align-items-center">
                   <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
                   {articles.length > articleDisplayCount && (
-                    <button className="btn btn-primary btn-sm" onClick={loadMoreArticles}>
+                    <span className="load-more" onClick={loadMoreArticles}>
                       Load More
-                    </button>
+                    </span>
                   )}
                 </div>
               </div>
@@ -224,21 +306,22 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
-                  <div className="d-flex align-items-center">
+                  <div className="d-flex align-items-center" style={{ height: '40px' }}>
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
                       onClick={handleDeleteAllComments}
+                      style={{ height: '100%' }}
                     >
                       Delete All
                     </button>
                     <div className="dropdown">
                       <button
                         className="btn btn-secondary btn-sm dropdown-toggle"
-                        style={{ fontSize: '0.8rem' }}
                         type="button"
                         id="commentSortDropdown"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
+                        style={{ height: '100%' }}
                       >
                         Sort By
                       </button>
@@ -272,7 +355,7 @@ export default function UserDashboard() {
                           <div>
                             <button
                               className="btn btn-outline-secondary btn-sm me-2"
-                              onClick={() => handleEditComment(comment.comment_id)}
+                              onClick={() => handleEditComment(comment)}
                             >
                               Edit
                             </button>
@@ -293,9 +376,9 @@ export default function UserDashboard() {
                 <div className="card-footer d-flex justify-content-between align-items-center">
                   <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
                   {comments.length > commentDisplayCount && (
-                    <button className="btn btn-primary btn-sm" onClick={loadMoreComments}>
+                    <span className="load-more" onClick={loadMoreComments}>
                       Load More
-                    </button>
+                    </span>
                   )}
                 </div>
               </div>

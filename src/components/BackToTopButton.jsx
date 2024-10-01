@@ -43,8 +43,8 @@ export default function BackToTop() {
 
 const backToTopStyles = {
   position: "fixed",
-  width: '80px',
-  height: '80px',
+  width: '50px',
+  height: '50px',
   bottom: "60px",
   right: "60px",
   backgroundColor: "#345284",
