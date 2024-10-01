@@ -160,6 +160,11 @@ export default function UserDashboard() {
     }
   };
 
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setCurrentEdit(null);
+  };
+
   useEffect(() => {
     if (!user) {
       window.location.href = '/login'; 
@@ -209,6 +214,9 @@ export default function UserDashboard() {
               <button type="button" className="btn btn-primary mt-3" onClick={handleSaveEdit}>
                 Save
               </button>
+              <button type="button" className="btn btn-secondary mt-3" onClick={handleCancelEdit}>
+                Cancel
+              </button>
             </form>
           </div>
         </div>
@@ -223,11 +231,10 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
-                  <div className="d-flex align-items-center" style={{ height: '40px' }}>
+                  <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
                       onClick={handleDeleteAllArticles}
-                      style={{ height: '100%' }}
                     >
                       Delete All
                     </button>
@@ -238,7 +245,6 @@ export default function UserDashboard() {
                         id="articleSortDropdown"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        style={{ height: '100%' }}
                       >
                         Sort By
                       </button>
@@ -262,7 +268,9 @@ export default function UserDashboard() {
                             <i className="fas fa-link" style={{ color: '#345284' }}></i>
                           </Link>
                         </div>
-                        <div className="article-preview text-muted small">{article.body}</div>
+                        <div className="article-preview text-muted small">
+                          {article.body.length > 150 ? article.body.substring(0, 150) + '...' : article.body}
+                        </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
                             <span className="me-3">
@@ -293,9 +301,9 @@ export default function UserDashboard() {
                 <div className="card-footer d-flex justify-content-between align-items-center">
                   <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
                   {articles.length > articleDisplayCount && (
-                    <span className="load-more" onClick={loadMoreArticles}>
+                    <button className="btn btn-primary" onClick={loadMoreArticles}>
                       Load More
-                    </span>
+                    </button>
                   )}
                 </div>
               </div>
@@ -306,11 +314,10 @@ export default function UserDashboard() {
               <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
-                  <div className="d-flex align-items-center" style={{ height: '40px' }}>
+                  <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
                       onClick={handleDeleteAllComments}
-                      style={{ height: '100%' }}
                     >
                       Delete All
                     </button>
@@ -321,7 +328,6 @@ export default function UserDashboard() {
                         id="commentSortDropdown"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        style={{ height: '100%' }}
                       >
                         Sort By
                       </button>
@@ -376,9 +382,9 @@ export default function UserDashboard() {
                 <div className="card-footer d-flex justify-content-between align-items-center">
                   <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
                   {comments.length > commentDisplayCount && (
-                    <span className="load-more" onClick={loadMoreComments}>
+                    <button className="btn btn-primary" onClick={loadMoreComments}>
                       Load More
-                    </span>
+                    </button>
                   )}
                 </div>
               </div>
