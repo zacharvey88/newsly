@@ -43,7 +43,7 @@ export default function UserDashboard() {
       );
       setArticles(response.data.articles);
     } catch (error) {
-      setErrorMessage("Error fetching your articles.");
+      setErrorMessage("There was a problem loading your dashboard. Please try refreshing the page.");
     } finally {
       setLoading(false);
     }
@@ -145,13 +145,11 @@ export default function UserDashboard() {
   const handleSaveEdit = async () => {
     try {
       if (currentEdit.article_id) {
-        // Save edited article
         await axios.patch(`/api/articles/${currentEdit.article_id}`, editContent);
-        fetchUserArticles(); // Refresh articles after editing
+        fetchUserArticles(); 
       } else if (currentEdit.comment_id) {
-        // Save edited comment
         await axios.patch(`/api/comments/${currentEdit.comment_id}`, { body: editContent.body });
-        fetchUserComments(); // Refresh comments after editing
+        fetchUserComments();
       }
       setEditMode(false);
       setCurrentEdit(null);
