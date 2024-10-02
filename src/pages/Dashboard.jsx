@@ -4,7 +4,7 @@ import { UserContext } from "../contexts/User";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import LoadingScreen from "../utilities/LoadingScreen";
-import Modal from "react-modal";
+import Modal from "react-modal"; // React Modal for edit
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
