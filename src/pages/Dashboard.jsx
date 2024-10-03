@@ -22,10 +22,13 @@ export default function UserDashboard() {
 
   useEffect(() => {
     if (user) {
+      console.log(user);
+      
       fetchUserArticles();
       fetchUserComments();
     } 
     else {
+      console.log(user);
       window.location.href = '/login'; 
     }
   }, [user]);
@@ -124,6 +127,28 @@ export default function UserDashboard() {
 
   return (
     <div className="container dashboard-container">
+
+      {/* Edit Modal */}
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="row justify-content-center">
         <div className="col-lg-10">
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
@@ -179,7 +204,7 @@ export default function UserDashboard() {
                         </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
-                            <span className="me-3">
+                            <span className="me-3 pl-2">
                               <i className="fas fa-message" style={{ color: '#345284' }}></i> {article.comment_count}
                               <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {article.votes}
                             </span>
@@ -187,7 +212,7 @@ export default function UserDashboard() {
                           <div>
                             <button
                               className="btn btn-outline-secondary btn-sm me-2"
-                              onClick={() => handleEditArticle(article)}
+                              data-toggle="modal" data-target="#exampleModalCenter"
                             >
                               Edit
                             </button>
