@@ -285,11 +285,14 @@ export default function UserDashboard() {
                     <li className="list-group-item text-muted">No comments available.</li>
                   )}
                 </ul>
-                {comments.length > commentDisplayCount && (
-                  <button className="btn btn-primary w-100" onClick={loadMoreComments}>
-                    Load more
-                  </button>
-                )}
+                <div className="card-footer d-flex justify-content-between align-items-center">
+                  <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
+                  {comments.length > commentDisplayCount && (
+                    <button className="btn btn-primary" onClick={loadMoreComments}>
+                      Load More
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
