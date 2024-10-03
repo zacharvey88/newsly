@@ -20,21 +20,16 @@ export default function UserDashboard() {
   const [articleDisplayCount, setArticleDisplayCount] = useState(10);
   const [commentDisplayCount, setCommentDisplayCount] = useState(10);
 
-  const [editMode, setEditMode] = useState(false);
-  const [currentEdit, setCurrentEdit] = useState(null);
-
-  const [editContent, setEditContent] = useState({
-    title: '',
-    body: '',
-    article_img_url: ''
-  });
-
   useEffect(() => {
     if (user) {
       fetchUserArticles();
       fetchUserComments();
+    } 
+    else {
+      window.location.href = '/login'; 
     }
   }, [user]);
+
 
   const fetchUserArticles = async () => {
     try {
@@ -124,101 +119,11 @@ export default function UserDashboard() {
     });
   };
 
-  const handleEditArticle = (article) => {
-    setEditMode(true);
-    setCurrentEdit(article);
-    setEditContent({
-      title: article.title,
-      body: article.body,
-      article_img_url: article.article_img_url
-    });
-  };
-
-  const handleEditComment = (comment) => {
-    setEditMode(true);
-    setCurrentEdit(comment);
-    setEditContent({
-      body: comment.body
-    });
-  };
-
-  const handleSaveEdit = async () => {
-    try {
-      if (currentEdit.article_id) {
-        await axios.patch(`/api/articles/${currentEdit.article_id}`, editContent);
-        fetchUserArticles(); 
-      } else if (currentEdit.comment_id) {
-        await axios.patch(`/api/comments/${currentEdit.comment_id}`, { body: editContent.body });
-        fetchUserComments();
-      }
-      setEditMode(false);
-      setCurrentEdit(null);
-    } catch (error) {
-      setErrorMessage("Error saving changes.");
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditMode(false);
-    setCurrentEdit(null);
-  };
-
-  useEffect(() => {
-    if (!user) {
-      window.location.href = '/login'; 
-    }
-  }, [user]);
 
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="container dashboard-container">
-      {editMode && (
-        <div className="overlay">
-          <div className="edit-modal">
-            <h5>Edit {currentEdit.article_id ? "Article" : "Comment"}</h5>
-            <form>
-              {currentEdit.article_id && (
-                <>
-                  <div className="form-group">
-                    <label>Title</label>
-                    <input
-                      type="text"
-                      value={editContent.title}
-                      onChange={(e) => setEditContent({ ...editContent, title: e.target.value })}
-                      className="form-control"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Image URL</label>
-                    <input
-                      type="text"
-                      value={editContent.article_img_url}
-                      onChange={(e) => setEditContent({ ...editContent, article_img_url: e.target.value })}
-                      className="form-control"
-                    />
-                  </div>
-                </>
-              )}
-              <div className="form-group">
-                <label>Body</label>
-                <textarea
-                  value={editContent.body}
-                  onChange={(e) => setEditContent({ ...editContent, body: e.target.value })}
-                  className="form-control"
-                  rows="5"
-                />
-              </div>
-              <button type="button" className="btn btn-primary mt-3" onClick={handleSaveEdit}>
-                Save
-              </button>
-              <button type="button" className="btn btn-secondary mt-3" onClick={handleCancelEdit}>
-                Cancel
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
       <div className="row justify-content-center">
         <div className="col-lg-10">
           {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
@@ -266,12 +171,16 @@ export default function UserDashboard() {
                             <i className="fas fa-link" style={{ color: '#345284' }}></i>
                           </Link>
                         </div>
+                        <div>
+                          {article.title}
+                        </div>
                         <div className="article-preview text-muted small">
                           {article.body.length > 150 ? article.body.substring(0, 150) + '...' : article.body}
                         </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
                             <span className="me-3">
+                              <i className="fas fa-message" style={{ color: '#345284' }}></i> {article.comment_count}
                               <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {article.votes}
                             </span>
                           </div>
