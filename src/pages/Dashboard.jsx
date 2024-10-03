@@ -154,6 +154,7 @@ export default function UserDashboard() {
                       <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date {articleSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setArticleSortBy('votes')}>Likes {articleSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
                         <div className="dropdown-divider"></div>
                         <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
                         <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending {articleSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
@@ -206,9 +207,9 @@ export default function UserDashboard() {
                   )}
                 </ul>
                 <div className="card-footer d-flex justify-content-between align-items-center">
-                  <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
-                  {comments.length > commentDisplayCount && (
-                    <button className="btn btn-primary" onClick={loadMoreComments}>
+                  <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
+                  {articles.length > articleDisplayCount && (
+                    <button className="btn btn-primary" onClick={loadMoreArticles}>
                       Load More
                     </button>
                   )}
@@ -232,7 +233,7 @@ export default function UserDashboard() {
                       <button
                         className="btn btn-secondary btn-sm dropdown-toggle"
                         type="button"
-                        id="commentSortDropdown"
+                        id="comment Dropdown"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
@@ -263,7 +264,7 @@ export default function UserDashboard() {
                         </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
-                            <span className="me-3">
+                            <span>
                               <i className="fas fa-thumbs-up ms-3" style={{ color: '#345284' }}></i> {comment.votes}
                             </span>
                           </div>
