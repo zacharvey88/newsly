@@ -22,17 +22,13 @@ export default function UserDashboard() {
 
   useEffect(() => {
     if (user) {
-      console.log(user);
-      
       fetchUserArticles();
       fetchUserComments();
     } 
     else {
-      console.log(user);
       window.location.href = '/login'; 
     }
   }, [user]);
-
 
   const fetchUserArticles = async () => {
     try {
@@ -67,30 +63,12 @@ export default function UserDashboard() {
     }
   };
 
-  const handleDeleteAllArticles = async () => {
-    try {
-      await Promise.all(articles.map(article => axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)));
-      setArticles([]);
-    } catch (error) {
-      setErrorMessage("Error deleting all articles.");
-    }
-  };
-
   const handleDeleteComment = async (commentId) => {
     try {
       await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
       setComments(comments.filter((comment) => comment.comment_id !== commentId));
     } catch (error) {
       setErrorMessage("Error deleting comment.");
-    }
-  };
-
-  const handleDeleteAllComments = async () => {
-    try {
-      await Promise.all(comments.map(comment => axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)));
-      setComments([]);
-    } catch (error) {
-      setErrorMessage("Error deleting all comments.");
     }
   };
 
@@ -122,28 +100,25 @@ export default function UserDashboard() {
     });
   };
 
-
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="container dashboard-container">
 
       {/* Edit Modal */}
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+      <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLongTitle">Edit Article</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-              ...
+            <div className="modal-body">
+              {/* Modal content here */}
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>
@@ -162,7 +137,7 @@ export default function UserDashboard() {
                   <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
-                      onClick={handleDeleteAllArticles}
+                      onClick={() => handleDeleteAllArticles()}
                     >
                       Delete All
                     </button>
@@ -204,40 +179,37 @@ export default function UserDashboard() {
                         </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
-                            <span className="me-3 pl-2">
+                            <span className="me-3">
                               <i className="fas fa-message" style={{ color: '#345284' }}></i> {article.comment_count}
-                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {article.votes}
+                              <i className="fas fa-thumbs-up ms-3" style={{ color: '#345284' }}></i> {article.votes}
                             </span>
                           </div>
                           <div>
                             <button
                               className="btn btn-outline-secondary btn-sm me-2"
-                              data-toggle="modal" data-target="#exampleModalCenter"
+                              data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
                             >
-                              Edit
+                              <i className="fas fa-edit"></i>
                             </button>
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => handleDeleteArticle(article.article_id)}
                             >
-                              Delete
+                              <i className="fas fa-trash"></i>
                             </button>
                           </div>
                         </div>
                       </li>
                     ))
                   ) : (
-                    <li className="list-group-item">You haven't posted any articles yet.</li>
+                    <li className="list-group-item text-muted">No articles available.</li>
                   )}
                 </ul>
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
-                  {articles.length > articleDisplayCount && (
-                    <button className="btn btn-primary" onClick={loadMoreArticles}>
-                      Load More
-                    </button>
-                  )}
-                </div>
+                {articles.length > articleDisplayCount && (
+                  <button className="btn btn-primary w-100" onClick={loadMoreArticles}>
+                    Load more
+                  </button>
+                )}
               </div>
             </div>
 
@@ -249,7 +221,7 @@ export default function UserDashboard() {
                   <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
-                      onClick={handleDeleteAllComments}
+                      onClick={() => handleDeleteAllComments()}
                     >
                       Delete All
                     </button>
@@ -277,48 +249,47 @@ export default function UserDashboard() {
                   {sortComments(comments).slice(0, commentDisplayCount).length > 0 ? (
                     sortComments(comments).slice(0, commentDisplayCount).map((comment) => (
                       <li key={comment.comment_id} className="list-group-item">
-                        <div className="article-meta mb-1 d-flex justify-content-between align-items-center">
-                          <span className="text-muted small">Posted on {moment(comment.created_at).format("DD MMM YYYY")}</span>
+                        <div className="comment-meta mb-1 d-flex justify-content-between align-items-center">
+                          <span className="text-muted small">Commented on {moment(comment.created_at).format("DD MMM YYYY")}</span>
                           <Link to={`/articles/${comment.article_id}`} className="ms-auto">
                             <i className="fas fa-link" style={{ color: '#345284' }}></i>
                           </Link>
                         </div>
-                        <div className="article-preview text-muted small">{comment.body}</div>
+                        <div>
+                          {comment.body.length > 150 ? comment.body.substring(0, 150) + '...' : comment.body}
+                        </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
                             <span className="me-3">
-                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {comment.votes}
+                              <i className="fas fa-thumbs-up ms-3" style={{ color: '#345284' }}></i> {comment.votes}
                             </span>
                           </div>
                           <div>
                             <button
                               className="btn btn-outline-secondary btn-sm me-2"
-                              onClick={() => handleEditComment(comment)}
+                              data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
                             >
-                              Edit
+                              <i className="fas fa-edit"></i>
                             </button>
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => handleDeleteComment(comment.comment_id)}
                             >
-                              Delete
+                              <i className="fas fa-trash"></i>
                             </button>
                           </div>
                         </div>
                       </li>
                     ))
                   ) : (
-                    <li className="list-group-item">You haven't posted any comments yet.</li>
+                    <li className="list-group-item text-muted">No comments available.</li>
                   )}
                 </ul>
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
-                  {comments.length > commentDisplayCount && (
-                    <button className="btn btn-primary" onClick={loadMoreComments}>
-                      Load More
-                    </button>
-                  )}
-                </div>
+                {comments.length > commentDisplayCount && (
+                  <button className="btn btn-primary w-100" onClick={loadMoreComments}>
+                    Load more
+                  </button>
+                )}
               </div>
             </div>
           </div>
