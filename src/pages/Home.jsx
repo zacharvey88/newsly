@@ -6,6 +6,7 @@ import ArticlesList from "../components/ArticlesList";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import LoadingScreen from "../utilities/LoadingScreen";
+import Pagination from "../utilities/Pagination";
 
 export default () => {
 
@@ -13,7 +14,7 @@ export default () => {
   const [isLoading,setIsLoading] = useState(true)
 
   useEffect(()=>{
-    axios.get("https://nc-news-ngma.onrender.com/api/articles?sort_by=votes")
+    axios.get("https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=10")
     .then((response)=>{
       setArticles(response.data.articles)
       setIsLoading(false)
@@ -32,6 +33,7 @@ export default () => {
           <div className="row g-5">
             <div className="col-md-8">
               <ArticlesList articles={articles.slice(3)} />
+              <Pagination />
             </div>
             <div className="col-md-4">
               <div className="position-sticky">
