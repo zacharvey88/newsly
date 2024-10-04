@@ -1,20 +1,21 @@
-export default ({ currentPage, totalArticles, onPageChange }) => {
-  const totalPages = Math.ceil(totalArticles / 10);
+export default ({ currentOffset, limit, totalArticles, onOffsetChange }) => {
+  const isPreviousDisabled = currentOffset === 0; 
+  const isNextDisabled = currentOffset + limit >= totalArticles;
 
   return (
     <nav className="blog-pagination" aria-label="Pagination">
       <button
         className="btn btn-outline-primary rounded-pill"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
+        onClick={() => onOffsetChange(currentOffset - limit)}
+        disabled={isPreviousDisabled}
       >
         Previous
       </button>
 
       <button
         className="btn btn-outline-secondary rounded-pill"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        onClick={() => onOffsetChange(currentOffset + limit)}
+        disabled={isNextDisabled}
       >
         Next
       </button>

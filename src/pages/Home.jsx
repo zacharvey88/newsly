@@ -11,27 +11,28 @@ import Pagination from "../utilities/Pagination";
 export default () => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [offset, setOffset] = useState(0); 
   const [totalArticles, setTotalArticles] = useState(0);
+  const limit = 10; 
 
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=10&p=${page}`)
+      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
       .then((response) => {
         setArticles(response.data.articles);
-        setTotalArticles(response.data.total_count); 
+        setTotalArticles(response.data.total_count);
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
       });
-  }, [page]);
+  }, [offset]); 
 
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= Math.ceil(totalArticles / 10)) {
-      setPage(newPage);
+  const handleOffsetChange = (newOffset) => {
+    if (newOffset >= 0 && newOffset < totalArticles) {
+      setOffset(newOffset);
     }
   };
 
@@ -47,9 +48,10 @@ export default () => {
             <div className="col-md-8">
               <ArticlesList articles={articles.slice(3)} />
               <Pagination
-                currentPage={page}
+                currentOffset={offset}
+                limit={limit}
                 totalArticles={totalArticles}
-                onPageChange={handlePageChange}
+                onOffsetChange={handleOffsetChange}
               />
             </div>
             <div className="col-md-4">
