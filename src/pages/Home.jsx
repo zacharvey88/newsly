@@ -11,7 +11,7 @@ import Pagination from "../utilities/Pagination";
 export default () => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [offset, setOffset] = useState(null); 
+  const [offset, setOffset] = useState(0); 
   const [totalArticles, setTotalArticles] = useState(0);
   const limit = 10; 
 
