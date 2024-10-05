@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/User";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; 
 
 export default () => {
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const [body, setBody] = useState(""); 
   const [topic, setTopic] = useState("");
   const [articleImgUrl, setArticleImgUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ export default () => {
     const articleData = {
       title,
       author: user.username,
-      body,
+      body, 
       topic,
       article_img_url: articleImgUrl ? articleImgUrl : null,
     };
@@ -44,7 +46,7 @@ export default () => {
         setLoading(false);
         setSuccessMessage("Article posted successfully!");
         setTitle("");
-        setBody("");
+        setBody(""); 
         setTopic("");
         setArticleImgUrl("");
       })
@@ -55,14 +57,11 @@ export default () => {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center p-4"
-      // style={{ height: "100vh" }}
-    >
+    <div className="d-flex justify-content-center align-items-center p-4">
       <form
         onSubmit={handleSubmit}
         className="border p-4 rounded shadow-sm"
-        style={{ width: "100%", maxWidth: "600px" }} 
+        style={{ width: "100%", maxWidth: "600px" }}
       >
         <div className="mb-3">
           <label className="form-label">Title:</label>
@@ -77,13 +76,12 @@ export default () => {
 
         <div className="mb-3">
           <label className="form-label">Body:</label>
-          <textarea
-            className="form-control"
+          <ReactQuill
+            theme="snow"
             value={body}
-            onChange={(e) => setBody(e.target.value)}
-            required
-            style={{ minHeight: "250px" }} 
-          ></textarea>
+            onChange={setBody}
+            style={{ minHeight: "200px" }} 
+          />
         </div>
 
         <div className="mb-3">
@@ -116,7 +114,7 @@ export default () => {
         <div className="text-center">
           <input
             type="submit"
-            className="btn btn-sm btn-outline-secondary w-auto" 
+            className="btn btn-sm btn-outline-secondary w-auto"
             value="Submit Article"
             disabled={loading}
           />
