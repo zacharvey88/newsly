@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 export default ({ articles }) => {
   if (!articles) {
@@ -16,7 +17,12 @@ export default ({ articles }) => {
             <p className="blog-post-meta">
               {article.created_at.slice(0, 10)} by {article.author}
             </p>
-            <p>{article.body.slice(0, 500)}</p>
+            <div
+            dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(article.body.slice(0, 500)),
+                  }}>
+            </div>
+            {/* <p>{article.body.slice(0, 500)}</p> */}
             <div className="article-stats">
               <p>
                 <i className="fa-solid fa-heart"></i> {article.votes}
