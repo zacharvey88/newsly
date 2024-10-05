@@ -571,45 +571,14 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 /* ---------- Article Form ---------- */
 
-/* .article-form-container {
-  max-width: 600px;
-  margin: 20px;
-  padding: 20px;
-} */
-
-/* label {
-  display: block;
-  margin: 10px 0;
+.quill-editor .ql-container {
+  min-height: 300px;
 }
 
-input,
-textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
+.quill-editor .ql-editor {
+  min-height: 250px;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
+.quill-editor {
+  max-width: 100%;
 }
-
-button:disabled {
-  background-color: #ccc;
-}
-
-.success-message {
-  color: green;
-  margin-top: 10px;
-}
-
-.error-message {
-  color: red;
-  margin-top: 10px;
-} */
-
-
-/* ---------- Dashboard ---------- */
