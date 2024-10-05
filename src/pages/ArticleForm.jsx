@@ -80,7 +80,7 @@ export default () => {
             theme="snow"
             value={body}
             onChange={setBody}
-            style={{ minHeight: "200px" }} 
+            className="quill-editor"
           />
         </div>
 
