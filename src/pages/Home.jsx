@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import LoadingScreen from "../utilities/LoadingScreen";
 import Pagination from "../utilities/Pagination";
 
-export default () => {
+export default () => {  
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0); 
