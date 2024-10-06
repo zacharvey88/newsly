@@ -573,16 +573,21 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 .quill-editor .ql-container {
   min-height: 300px;
-  border-bottom-left-radius: 5;
-  border-bottom-right-radius: 5;
+  border-bottom-left-radius: 5px;  
+  border-bottom-right-radius: 5px; 
   border-color: #dee2e6;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .quill-editor .ql-editor {
   min-height: 250px;
-  border-top-left-radius: 5;
-  border-top-right-radius: 5;
+  border-top-left-radius: 5px; 
+  border-top-right-radius: 5px;
   border-color: #dee2e6;
+  border-width: 1px;
+  border-style: solid;
+  border-bottom: none;
 }
 
 .quill-editor {

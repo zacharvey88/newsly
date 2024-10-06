@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import LoadingScreen from "../utilities/LoadingScreen";
 import DOMPurify from "dompurify";
+import DeleteConfirmation from "../utilities/DeleteModal"; 
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
@@ -20,6 +21,11 @@ export default function UserDashboard() {
 
   const [articleDisplayCount, setArticleDisplayCount] = useState(10);
   const [commentDisplayCount, setCommentDisplayCount] = useState(10);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteType, setDeleteType] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -55,23 +61,39 @@ export default function UserDashboard() {
     }
   };
 
-  const handleDeleteArticle = async (articleId) => {
-    try {
-      await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
-      setArticles(articles.filter((article) => article.article_id !== articleId));
-    } catch (error) {
-      setErrorMessage("Error deleting article.");
-    }
-  };
+const handleDeleteArticle = async (articleId) => {
+  try {
+    await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
+    setArticles(articles.filter((article) => article.article_id !== articleId));
+  } catch (error) {
+    setErrorMessage("Error deleting article.");
+  }
+};
 
-  const handleDeleteComment = async (commentId) => {
-    try {
-      await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
-      setComments(comments.filter((comment) => comment.comment_id !== commentId));
-    } catch (error) {
-      setErrorMessage("Error deleting comment.");
-    }
-  };
+const handleDeleteComment = async (commentId) => {
+  try {
+    await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
+    setComments(comments.filter((comment) => comment.comment_id !== commentId));
+  } catch (error) {
+    setErrorMessage("Error deleting comment.");
+  }
+};
+
+const openDeleteModal = (type, id, message) => {
+  setDeleteType(type);
+  setDeleteId(id);
+  setDeleteMessage(message);
+  setShowDeleteModal(true);
+};
+
+const confirmDelete = (type, id) => {
+  setShowDeleteModal(false); 
+  if (type === 'article') {
+    handleDeleteArticle(id);
+  } else if (type === 'comment') {
+    handleDeleteComment(id);
+  }
+};
 
   const loadMoreArticles = () => {
     setArticleDisplayCount(articleDisplayCount + 10);
@@ -105,6 +127,17 @@ export default function UserDashboard() {
 
   return (
     <div className="container dashboard-container">
+      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmation
+        showModal={showDeleteModal}
+        hideModal={() => setShowDeleteModal(false)}
+        confirmModal={confirmDelete}
+        id={deleteId}
+        type={deleteType}
+        message={deleteMessage}
+      />
 
       {/* Edit Modal */}
       <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -197,7 +230,8 @@ export default function UserDashboard() {
                             </button>
                             <button
                               className="btn btn-outline-danger btn-sm"
-                              onClick={() => handleDeleteArticle(article.article_id)}
+                              onClick={() => 
+                                openDeleteModal('article', article.article_id, `Are you sure you want to delete the article "${article.title}"?`)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
@@ -280,7 +314,9 @@ export default function UserDashboard() {
                             </button>
                             <button
                               className="btn btn-outline-danger btn-sm"
-                              onClick={() => handleDeleteComment(comment.comment_id)}
+                              onClick={() => 
+                                openDeleteModal('comment', comment.comment_id, `Are you sure you want to delete this comment?`)
+                              }
                             >
                               <i className="fas fa-trash"></i>
                             </button>
