@@ -4,6 +4,7 @@ import { UserContext } from "../contexts/User";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import LoadingScreen from "../utilities/LoadingScreen";
+import DOMPurify from "dompurify";
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);

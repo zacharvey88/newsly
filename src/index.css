@@ -573,11 +573,11 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 .quill-editor .ql-container {
   min-height: 300px;
+  border-radius: 5px;
 }
 
 .quill-editor .ql-editor {
   min-height: 250px;
-  border-radius: 5px;
 }
 
 .quill-editor {
