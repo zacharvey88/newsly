@@ -79,10 +79,19 @@ const handleDeleteComment = async (commentId) => {
   }
 };
 
-const openDeleteModal = (type, id, message) => {
+const handleDeleteAllArticles = () => {
+  openDeleteModal('article', null, 'Are you sure you want to delete all articles? This action cannot be undone.', true);
+};
+
+const handleDeleteAllComments = () => {
+  openDeleteModal('comment', null, 'Are you sure you want to delete all comments? This action cannot be undone.', true);
+};
+
+const openDeleteModal = (type, id, message, isDeleteAll = false) => {
   setDeleteType(type);
   setDeleteId(id);
   setDeleteMessage(message);
+  setIsDeleteAll(isDeleteAll);
   setShowDeleteModal(true);
 };
 
@@ -137,6 +146,7 @@ const confirmDelete = (type, id) => {
         id={deleteId}
         type={deleteType}
         message={deleteMessage}
+        isDeleteAll={isDeleteAll} 
       />
 
       {/* Edit Modal */}
@@ -231,7 +241,7 @@ const confirmDelete = (type, id) => {
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => 
-                                openDeleteModal('article', article.article_id, `Are you sure you want to delete this article? \n ${article.title}`)}
+                                openDeleteModal('article', article.article_id, `Are you sure you want to delete this article?`)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
