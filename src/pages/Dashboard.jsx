@@ -185,7 +185,7 @@ export default function UserDashboard() {
                           <div>
                             <span className="me-3">
                               <i className="fas fa-message" style={{ color: '#345284' }}></i> {article.comment_count}
-                              <i className="fas fa-thumbs-up ms-3" style={{ color: '#345284' }}></i> {article.votes}
+                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {article.votes}
                             </span>
                           </div>
                           <div>
