@@ -231,7 +231,7 @@ const confirmDelete = (type, id) => {
                             <button
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => 
-                                openDeleteModal('article', article.article_id, `Are you sure you want to delete the article "${article.title}"?`)}
+                                openDeleteModal('article', article.article_id, `Are you sure you want to delete this article? \n ${article.title}`)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
