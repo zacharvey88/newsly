@@ -3,6 +3,8 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/User";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; 
+import { useNavigate } from "react-router-dom";
+
 
 export default () => {
   const [title, setTitle] = useState("");
@@ -14,6 +16,8 @@ export default () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [topics, setTopics] = useState([]);
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     axios
@@ -49,6 +53,8 @@ export default () => {
         setBody(""); 
         setTopic("");
         setArticleImgUrl("");
+        const newArticleId = response.data.article.article_id;
+        navigate(`https://nc-news-ngma.onrender.com/api/articles/${newArticleId}`);
       })
       .catch((error) => {
         setLoading(false);

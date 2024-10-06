@@ -1,23 +1,29 @@
-import React from 'react'
+import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-const DeleteConfirmation = ({ showModal, hideModal, confirmModal, id, type, message }) => {
-    return (
-        <Modal show={showModal} onHide={hideModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body><div className="alert alert-danger">{message}</div></Modal.Body>
-        <Modal.Footer>
-          <Button variant="default" onClick={hideModal}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={() => confirmModal(type, id) }>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
+export default function DeleteConfirmation({ showModal, hideModal, confirmModal, id, type, message }) {
+  return (
+    <Modal
+      show={showModal}
+      onHide={hideModal}
+      centered 
+      backdrop="static" 
+      keyboard={false} 
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm Deletion</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>{message}</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={hideModal}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={() => confirmModal(type, id)}>
+          Confirm Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 }
-
-export default DeleteConfirmation;
