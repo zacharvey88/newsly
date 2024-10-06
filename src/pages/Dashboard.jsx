@@ -26,6 +26,7 @@ export default function UserDashboard() {
   const [deleteId, setDeleteId] = useState(null);
   const [deleteType, setDeleteType] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
+  const [isDeleteAll, setIsDeleteAll] = useState(false);
 
   useEffect(() => {
     if (user) {
