@@ -175,8 +175,10 @@ export default function UserDashboard() {
                         <div>
                           {article.title}
                         </div>
-                        <div className="article-preview text-muted small">
-                          {article.body.length > 150 ? article.body.substring(0, 150) + '...' : article.body}
+                        <div className="article-preview text-muted small"
+                            dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(article.body.length > 150 ? article.body.substring(0, 150) + '...' : article.body),
+                        }}>
                         </div>
                         <div className="mt-2 d-flex justify-content-between align-items-center">
                           <div>
