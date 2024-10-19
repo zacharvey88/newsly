@@ -23,12 +23,14 @@ export default function ArticlesPage() {
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
       .then((response) => {
+        console.log('Total_Count from response: ' + response.data.total_count);
         setArticles(response.data.articles);
         setArticlesByVotes([...articles].sort((a,b) => a.votes - b.votes));
+        console.log(setArticlesByVotes);
         setArticlesByCommentCount([...articles].sort((a,b) => a.comment_count - b.comment_count));
+        console.log(articlesByCommentCount);
         setTotalArticles(response.data.total_count);
-        console.log(totalArticles);
-        
+        console.log('TotalArticles: '+ totalArticles);
         setIsLoading(false);
       })
       .catch((err) => {
