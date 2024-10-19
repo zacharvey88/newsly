@@ -49,7 +49,7 @@ export default function ArticlesPage() {
         <LoadingScreen /> 
       ) : (
         <>
-          <FeaturedArticleLarge article={articlesByVotes(0)} />
+          <FeaturedArticleLarge article={articlesByVotes[0]} />
           <FeaturedArticleSmall articles={articlesByVotes.slice(1, 3)} />
           <div className="row g-5">
             <div className="col-md-8">
