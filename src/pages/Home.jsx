@@ -10,6 +10,9 @@ import Pagination from "../utilities/Pagination";
 
 export default function ArticlesPage() {  
   const [articles, setArticles] = useState([]);
+  const [articlesByVotes, setArticlesByVotes] = useState([]);
+  const [articlesByCommentCount, setArticlesByCommentCount] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0); 
   const [totalArticles, setTotalArticles] = useState(0);
@@ -21,7 +24,11 @@ export default function ArticlesPage() {
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
       .then((response) => {
         setArticles(response.data.articles);
+        setArticlesByVotes([...articles].sort((a,b) => a.votes - b.votes));
+        setArticlesByCommentCount([...articles].sort((a,b) => a.comment_count - b.comment_count));
         setTotalArticles(response.data.total_count);
+        console.log(totalArticles);
+        
         setIsLoading(false);
       })
       .catch((err) => {
@@ -31,7 +38,6 @@ export default function ArticlesPage() {
   }, [offset]); 
 
   const handleOffsetChange = (newOffset) => {
-    // Ensure the new offset is within valid boundaries
     if (newOffset >= 0 && newOffset < totalArticles) {
       setOffset(newOffset);
     }
@@ -40,15 +46,20 @@ export default function ArticlesPage() {
   return (
     <main className="container">
       {isLoading ? (
-        <LoadingScreen />
+        <LoadingScreen /> 
       ) : (
         <>
-          <FeaturedArticleLarge article={articles[0]} />
-          <FeaturedArticleSmall articles={articles.slice(1, 3)} />
+          <FeaturedArticleLarge article={articlesByVotes.slice(0)} />
+          <FeaturedArticleSmall articles={articlesByVotes.slice(1, 3)} />
           <div className="row g-5">
             <div className="col-md-8">
-              <ArticlesList articles={articles.slice(3)} />
-              <Pagination
+            <ArticlesList 
+              articles={articles.filter((article) => 
+                !articlesByVotes.slice(0, 3).map(topArticle => topArticle.article_id).includes(article.article_id) &&
+                !articlesByCommentCount.slice(0, 3).map(topArticle => topArticle.article_id).includes(article.article_id)
+              )} 
+            />
+            <Pagination
                 currentOffset={offset}
                 limit={limit}
                 totalArticles={totalArticles}
@@ -58,7 +69,7 @@ export default function ArticlesPage() {
             <div className="col-md-4">
               <div className="position-sticky">
                 <SidebarCard />
-                <RecentPosts articles={articles} />
+                <RecentPosts articles={articlesByCommentCount.slice(0,3)} />
               </div>
             </div>
           </div>
