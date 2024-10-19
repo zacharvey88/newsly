@@ -81,11 +81,11 @@ const handleDeleteComment = async (commentId) => {
 };
 
 const handleDeleteAllArticles = () => {
-  openDeleteModal('article', null, 'Are you sure you want to delete all articles? This action cannot be undone.', true);
+  openDeleteModal('article', null, <>Are you sure you want to delete <strong>ALL</strong> articles?</>, true);
 };
 
 const handleDeleteAllComments = () => {
-  openDeleteModal('comment', null, 'Are you sure you want to delete all comments? This action cannot be undone.', true);
+  openDeleteModal('comment', null, <>Are you sure you want to delete <strong>ALL</strong> comments?</>, true);
 };
 
 const openDeleteModal = (type, id, message, isDeleteAll = false) => {

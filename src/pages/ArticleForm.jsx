@@ -54,7 +54,7 @@ export default () => {
         setTopic("");
         setArticleImgUrl("");
         const newArticleId = response.data.article.article_id;
-        navigate(`https://nc-news-ngma.onrender.com/api/articles/${newArticleId}`);
+        navigate(`/articles/${newArticleId}`);
       })
       .catch((error) => {
         setLoading(false);
