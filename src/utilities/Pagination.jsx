@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Pagination = ({ currentOffset, limit, totalArticles, onOffsetChange }) => {
+export default function Pagination ({ currentOffset, limit, totalArticles, onOffsetChange }) {
   const isPreviousDisabled = currentOffset === 0; 
   const isNextDisabled = currentOffset + limit >= totalArticles;
 
@@ -24,5 +24,3 @@ const Pagination = ({ currentOffset, limit, totalArticles, onOffsetChange }) => 
     </nav>
   );
 };
-
-export default Pagination;

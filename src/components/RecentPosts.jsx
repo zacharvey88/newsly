@@ -7,9 +7,8 @@ export default ({ articles }) => {
 
   return (
     <section>
-      <h4 className="fst-italic">Recent posts</h4>
+      <h4 className="fst-italic">Most Commented Posts</h4>
       <ul className="list-unstyled">
-        {articles.slice(4, 7).map((article) => {
           return (
             <li key={article.article_id}>
               <Link
@@ -32,7 +31,6 @@ export default ({ articles }) => {
               </Link>
             </li>
           );
-        })}
       </ul>
     </section>
   );
