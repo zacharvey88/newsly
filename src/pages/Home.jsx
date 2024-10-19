@@ -18,19 +18,26 @@ export default function ArticlesPage() {
   const [totalArticles, setTotalArticles] = useState(0);
   const limit = 10; 
 
+  useEffect(()=>{
+    axios
+      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes`)
+      .then((response) => {
+        setTotalArticles(response.data.total_count);
+        console.log(response.data.total_count);
+        console.log(totalArticles);
+        setArticlesByVotes(response.data.articles);
+        console.log(setArticlesByVotes);
+        setArticlesByCommentCount([...articlesByVotes].sort((a,b) => a.comment_count - b.comment_count));
+        console.log(articlesByCommentCount);
+      })
+  },[]);
+
   useEffect(() => {
     setIsLoading(true);
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
       .then((response) => {
-        console.log('Total_Count from response: ' + response.data.total_count);
         setArticles(response.data.articles);
-        setArticlesByVotes([...articles].sort((a,b) => a.votes - b.votes));
-        console.log(setArticlesByVotes);
-        setArticlesByCommentCount([...articles].sort((a,b) => a.comment_count - b.comment_count));
-        console.log(articlesByCommentCount);
-        setTotalArticles(response.data.total_count);
-        console.log('TotalArticles: '+ totalArticles);
         setIsLoading(false);
       })
       .catch((err) => {
