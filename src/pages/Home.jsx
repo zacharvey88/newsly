@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import LoadingScreen from "../utilities/LoadingScreen";
 import Pagination from "../utilities/Pagination";
 
-export default () => {  
+export default function ArticlesPage() {  
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0); 
@@ -31,6 +31,7 @@ export default () => {
   }, [offset]); 
 
   const handleOffsetChange = (newOffset) => {
+    // Ensure the new offset is within valid boundaries
     if (newOffset >= 0 && newOffset < totalArticles) {
       setOffset(newOffset);
     }
@@ -65,4 +66,4 @@ export default () => {
       )}
     </main>
   );
-};
+}
