@@ -96,14 +96,38 @@ const openDeleteModal = (type, id, message, isDeleteAll = false) => {
   setShowDeleteModal(true);
 };
 
-const confirmDelete = (type, id) => {
-  setShowDeleteModal(false); 
-  if (type === 'article') {
-    handleDeleteArticle(id);
-  } else if (type === 'comment') {
-    handleDeleteComment(id);
+const confirmDelete = async (type, id) => {
+  setShowDeleteModal(false);
+
+  try {
+    if (isDeleteAll) {
+      if (type === 'article') {
+        await Promise.all(
+          articles.map((article) =>
+            axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)
+          )
+        );
+        setArticles([]);
+      } else if (type === 'comment') {
+        await Promise.all(
+          comments.map((comment) =>
+            axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)
+          )
+        );
+        setComments([]);
+      }
+    } else {
+      if (type === 'article') {
+        await handleDeleteArticle(id);
+      } else if (type === 'comment') {
+        await handleDeleteComment(id);
+      }
+    }
+  } catch (error) {
+    setErrorMessage("Error deleting items.");
   }
 };
+
 
   const loadMoreArticles = () => {
     setArticleDisplayCount(articleDisplayCount + 10);

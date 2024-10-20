@@ -23,12 +23,8 @@ export default function ArticlesPage() {
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes`)
       .then((response) => {
         setTotalArticles(response.data.total_count);
-        console.log(response.data.total_count);
-        console.log(totalArticles);
         setArticlesByVotes(response.data.articles);
-        console.log(setArticlesByVotes);
         setArticlesByCommentCount([...articlesByVotes].sort((a,b) => a.comment_count - b.comment_count));
-        console.log(articlesByCommentCount);
       })
   },[]);
 
