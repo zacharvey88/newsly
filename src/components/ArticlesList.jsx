@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default ({ articles }) => {
   if (!articles) {
     return <h3>Loading...</h3>;

@@ -25,6 +25,8 @@ export default function ArticlesPage() {
         setTotalArticles(response.data.total_count);
         setArticlesByVotes(response.data.articles);
         setArticlesByCommentCount([...articlesByVotes].sort((a,b) => a.comment_count - b.comment_count));
+        console.log("completed initial useEffect");
+        
       })
   },[]);
 
