@@ -4,31 +4,45 @@ import RecentPosts from "../components/RecentPosts";
 import SidebarCard from "../components/SidebarCard";
 import ArticlesList from "../components/ArticlesList";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import LoadingScreen from "../utilities/LoadingScreen";
 import Pagination from "../utilities/Pagination";
 
-export default function ArticlesPage() {  
+export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
   const [articlesByVotes, setArticlesByVotes] = useState([]);
   const [articlesByCommentCount, setArticlesByCommentCount] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
-  const [offset, setOffset] = useState(0); 
+  const [offset, setOffset] = useState(0);
   const [totalArticles, setTotalArticles] = useState(0);
-  const limit = 10; 
+  const limit = 10;
 
-  useEffect(()=>{
+  const articlesListRef = useRef(null);
+
+  useEffect(() => {
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes`)
+      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}`)
       .then((response) => {
         setTotalArticles(response.data.total_count);
         setArticlesByVotes(response.data.articles);
-        setArticlesByCommentCount([...articlesByVotes].sort((a,b) => a.comment_count - b.comment_count));
-        console.log("completed initial useEffect");
-        
+        setIsLoading(false);
       })
-  },[]);
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=comment_count&limit=3`)
+      .then((response) => {
+        setArticlesByCommentCount(response.data.articles);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -42,31 +56,37 @@ export default function ArticlesPage() {
         console.log(err);
         setIsLoading(false);
       });
-  }, [offset]); 
+  }, [offset]);
 
   const handleOffsetChange = (newOffset) => {
     if (newOffset >= 0 && newOffset < totalArticles) {
       setOffset(newOffset);
+      if (articlesListRef.current) {
+        articlesListRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
   return (
     <main className="container">
       {isLoading ? (
-        <LoadingScreen /> 
+        <LoadingScreen />
       ) : (
         <>
           <FeaturedArticleLarge article={articlesByVotes[0]} />
           <FeaturedArticleSmall articles={articlesByVotes.slice(1, 3)} />
           <div className="row g-5">
             <div className="col-md-8">
-            <ArticlesList 
-              articles={articles.filter((article) => 
-                !articlesByVotes.slice(0, 3).map(topArticle => topArticle.article_id).includes(article.article_id) &&
-                !articlesByCommentCount.slice(0, 3).map(topArticle => topArticle.article_id).includes(article.article_id)
-              )} 
-            />
-            <Pagination
+              <div ref={articlesListRef}>
+                <ArticlesList 
+                  articles={articles.filter(
+                    (article) =>
+                      !articlesByVotes.slice(0, 3).map(topArticle => topArticle.article_id).includes(article.article_id) &&
+                      !articlesByCommentCount.slice(0, 3).map(topArticle => topArticle.article_id).includes(article.article_id)
+                  )}
+                />
+              </div>
+              <Pagination
                 currentOffset={offset}
                 limit={limit}
                 totalArticles={totalArticles}
@@ -76,7 +96,7 @@ export default function ArticlesPage() {
             <div className="col-md-4">
               <div className="position-sticky">
                 <SidebarCard />
-                <RecentPosts articles={articlesByCommentCount.slice(0,3)} />
+                <RecentPosts articles={articlesByCommentCount.slice(0, 3)} />
               </div>
             </div>
           </div>

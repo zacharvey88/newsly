@@ -92,15 +92,15 @@ export default () => {
                   custom: {
                     key: 13,
                     handler: function (range, context) {
+                      const quill = context.quill;
                       if (context.format['list']) {
-                        this.quill.insertEmbed(range.index, 'list', context.format.list);
+                        quill.insertEmbed(range.index, 'list', context.format.list);
                       } else {
-                        this.quill.insertText(range.index, "\n");
-                      }
-                    }
-                  }
-                }
-              }
+                        quill.insertText(range.index, "\n");
+                      }                    },
+                  },
+                },
+              },
             }}
             className="quill-editor"
           />
