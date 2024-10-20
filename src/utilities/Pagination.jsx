@@ -7,7 +7,7 @@ export default function Pagination ({ currentOffset, limit, totalArticles, onOff
   return (
     <nav className="blog-pagination" aria-label="Pagination">
       <button
-        className={isNextDisabled ? "btn btn-outline-secondary rounded-pill" : "btn btn-outline-primary rounded-pill" }
+        className={isPreviousDisabled ? "btn btn-outline-secondary rounded-pill" : "btn btn-outline-primary rounded-pill" }
         onClick={() => onOffsetChange(currentOffset - limit)}
         disabled={isPreviousDisabled}
       >
