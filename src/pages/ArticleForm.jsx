@@ -86,6 +86,22 @@ export default () => {
             theme="snow"
             value={body}
             onChange={setBody}
+            modules={{
+              keyboard: {
+                bindings: {
+                  custom: {
+                    key: 13,
+                    handler: function (range, context) {
+                      if (context.format['list']) {
+                        this.quill.insertEmbed(range.index, 'list', context.format.list);
+                      } else {
+                        this.quill.insertText(range.index, "\n");
+                      }
+                    }
+                  }
+                }
+              }
+            }}
             className="quill-editor"
           />
         </div>

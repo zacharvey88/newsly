@@ -64,6 +64,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ---------- Pagination ---------- */
 
 .blog-pagination {
+  display: flex;
+  gap: 5px;
   margin-bottom: 4rem;
 }
 
@@ -238,6 +240,7 @@ h1, h2, h3, h4, h5, h6 {
 .article-stats {
   display: inline-flex;
   gap: 20px;
+  margin-top: 10px;
 }
 
 .fa-heart {
