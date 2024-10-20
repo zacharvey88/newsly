@@ -6,6 +6,24 @@ export default ({ articles }) => {
     return <h3>Loading...</h3>;
   }
 
+  const getLimitedContent = (body) => {
+    const cleanBody = DOMPurify.sanitize(body, { ALLOWED_TAGS: [] });
+    const sentences = cleanBody.split(/(?<=\.)\s+/); 
+    let limitedContent = "";
+    let totalLength = 0;
+
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i];
+      if (totalLength + sentence.length > 500) {
+        break; 
+      }
+      limitedContent += sentence + " ";
+      totalLength += sentence.length;
+    }
+
+    return limitedContent.trim();
+  };
+
   return (
     <ul className="articles-list">
       {articles.map((article, index) => {
@@ -21,7 +39,7 @@ export default ({ articles }) => {
             </p>
             <div
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(article.body.slice(0, 500)),
+                __html: DOMPurify.sanitize(getLimitedContent(article.body)),
               }}
             ></div>
             <div className="article-stats">
