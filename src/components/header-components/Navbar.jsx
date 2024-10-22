@@ -23,9 +23,7 @@ export default () => {
         <div className="col-4 pt-1 main-nav">
           <div className="main-nav-links">
             <Link className="link-secondary" to="/"><i className="fa-solid fa-house"></i> Home</Link>
-            {user.username && (
               <Link className="link-secondary" to="/new-article"><i className="fa-solid fa-file-pen"></i> Submit an article</Link>
-            )}
           </div>
           <Dropdown className="main-nav-toggle">
             <DropdownToggle as={Link}>
@@ -35,11 +33,9 @@ export default () => {
               <DropdownItem>
                 <Link to="/">Home</Link>
               </DropdownItem>
-              {user.username && (
                 <DropdownItem>
                   <Link to="/new-article">Submit an article</Link>
                 </DropdownItem>
-              )}
             </DropdownMenu>
           </Dropdown>
         </div>
