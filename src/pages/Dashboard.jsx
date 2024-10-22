@@ -204,12 +204,14 @@ const confirmDelete = async (type, id) => {
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
                   <div className="d-flex align-items-center">
+                  {articles.length > 0 && (
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
                       onClick={() => handleDeleteAllArticles()}
                     >
                       Delete All
                     </button>
+                  )}
                     <div className="dropdown">
                       <button
                         className="btn btn-secondary btn-sm dropdown-toggle"
@@ -295,12 +297,14 @@ const confirmDelete = async (type, id) => {
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
                   <div className="d-flex align-items-center">
+                  {comments.length > 0 && (
                     <button
                       className="btn btn-outline-danger btn-sm me-3"
                       onClick={() => handleDeleteAllComments()}
                     >
                       Delete All
                     </button>
+                  )}
                     <div className="dropdown">
                       <button
                         className="btn btn-secondary btn-sm dropdown-toggle"

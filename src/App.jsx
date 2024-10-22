@@ -1,8 +1,8 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import React from 'react';
-import { Route, Routes} from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
-import Header from './components/Header'
+import Header from './components/Header';
 import Home from './pages/Home';
 import ArticlePage from './pages/ArticlePage';
 import TopicPage from './pages/TopicPage';
@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import ArticleForm from './pages/ArticleForm';
 import UserDashboard from './pages/Dashboard';
 import BackToTop from './components/BackToTopButton';
+import ProtectedRoute from './utilities/ProtectedRoute'
 
 function App() {
   return (
@@ -24,15 +25,14 @@ function App() {
           <Route exact path="/articles/:article_id" element={<ArticlePage />} />
           <Route exact path="/:topic/articles" element={<TopicPage />} />
           <Route exact path="/login" element={<Login />} />
-          <Route exact path="/new-article" element={<ArticleForm />} />
+          <Route exact path="/new-article" element={<ProtectedRoute><ArticleForm /></ProtectedRoute>} />
           <Route exact path="/dashboard" element={<UserDashboard />} />
         </Routes>
       </div>
       <Footer />
-      <BackToTop/>
+      <BackToTop />
     </div>
   );
 }
-
 
 export default App;

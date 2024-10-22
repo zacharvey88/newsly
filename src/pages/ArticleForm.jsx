@@ -36,10 +36,12 @@ export default () => {
     setSuccessMessage("");
     setErrorMessage("");
 
+    const cleanedBody = body.replace(/<p><br><\/p>/g, "").replace(/<p>\s*<\/p>/g, "");
+
     const articleData = {
       title,
       author: user.username,
-      body, 
+      body: cleanedBody,
       topic,
       article_img_url: articleImgUrl ? articleImgUrl : null,
     };

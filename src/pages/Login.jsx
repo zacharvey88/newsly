@@ -1,14 +1,22 @@
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/User";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default () => {
   const [hidden, setHidden] = useState(true);
   const { user, setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [warningMsg, setWarningMsg] = useState(false);
-  const navigate = useNavigate()
+  const [loginMsg, setLoginMsg] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation(); 
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      setLoginMsg(location.state.message); 
+    }
+  }, [location.state]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -24,7 +32,7 @@ export default () => {
           setHidden(true);
           setUsername("");
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          navigate("/")
+          navigate("/");
         })
         .catch((err) => {
           if (err.response.status === 404) {
@@ -38,6 +46,11 @@ export default () => {
 
   return (
     <div className="login-page">
+      {loginMsg && (
+        <p className="login-msg">
+          <i className="fa-solid fa-triangle-exclamation"></i> {loginMsg}
+        </p>
+      )}
       <form className="login-form" onSubmit={handleSubmit}>
         <input
           autoFocus
