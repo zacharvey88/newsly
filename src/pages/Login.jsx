@@ -46,12 +46,12 @@ export default () => {
 
   return (
     <div className="login-page">
-      {loginMsg && (
-        <p className="login-msg">
-          <i className="fa-solid fa-triangle-exclamation"></i> {loginMsg}
-        </p>
-      )}
       <form className="login-form" onSubmit={handleSubmit}>
+        {loginMsg && (
+          <p className="login-msg">
+            <i className="fa-solid fa-triangle-exclamation"></i> {loginMsg}
+          </p>
+        )}
         <input
           autoFocus
           id="login-username"

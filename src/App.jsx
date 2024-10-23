@@ -26,7 +26,7 @@ function App() {
           <Route exact path="/:topic/articles" element={<TopicPage />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/new-article" element={<ProtectedRoute><ArticleForm /></ProtectedRoute>} />
-          <Route exact path="/dashboard" element={<UserDashboard />} />
+          <Route exact path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
         </Routes>
       </div>
       <Footer />

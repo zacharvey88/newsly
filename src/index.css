@@ -324,6 +324,10 @@ h1, h2, h3, h4, h5, h6 {
   align-content: center;
 }
 
+.fa-triangle-exclamation {
+  color: gold;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
