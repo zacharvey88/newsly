@@ -14,11 +14,12 @@ export default function ArticlesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
   const [totalArticles, setTotalArticles] = useState(0);
-  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false); 
+  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false); // Handle 'load more' state
   const limit = 10;
 
   const articlesListRef = useRef(null);
 
+  // Fetch featured articles by votes (initial load)
   useEffect(() => {
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}`)
@@ -33,6 +34,7 @@ export default function ArticlesPage() {
       });
   }, []);
 
+  // Fetch featured articles by comment count (initial load)
   useEffect(() => {
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=comment_count&limit=3`)
@@ -44,6 +46,7 @@ export default function ArticlesPage() {
       });
   }, []);
 
+  // Fetch articles with offset and append to the list
   useEffect(() => {
     if (offset === 0) {
       setIsLoading(true);
@@ -54,7 +57,7 @@ export default function ArticlesPage() {
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
       .then((response) => {
-        setArticles((prevArticles) => [...prevArticles, ...response.data.articles]); 
+        setArticles((prevArticles) => [...prevArticles, ...response.data.articles]); // Append new articles
         setIsLoading(false);
         setIsLoadMoreLoading(false);
       })
@@ -91,8 +94,10 @@ export default function ArticlesPage() {
                   )}
                 />
               </div>
+
+              {/* Load More Button */}
               {articles.length < totalArticles && (
-                <div className="d-flex justify-content-center">
+                <div className="d-flex justify-content-center mt-4">
                   <button
                     className="btn btn-primary rounded-pill"
                     onClick={handleLoadMore}
@@ -103,6 +108,7 @@ export default function ArticlesPage() {
                 </div>
               )}
             </div>
+
             <div className="col-md-4">
               <div className="position-sticky">
                 <SidebarCard />
