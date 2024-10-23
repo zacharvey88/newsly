@@ -6,7 +6,6 @@ import ArticlesList from "../components/ArticlesList";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import LoadingScreen from "../utilities/LoadingScreen";
-import Pagination from "../utilities/Pagination";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
@@ -15,6 +14,7 @@ export default function ArticlesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
   const [totalArticles, setTotalArticles] = useState(0);
+  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false); 
   const limit = 10;
 
   const articlesListRef = useRef(null);
@@ -45,25 +45,30 @@ export default function ArticlesPage() {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
+    if (offset === 0) {
+      setIsLoading(true);
+    } else {
+      setIsLoadMoreLoading(true);
+    }
+
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
       .then((response) => {
-        setArticles(response.data.articles);
+        setArticles((prevArticles) => [...prevArticles, ...response.data.articles]); 
         setIsLoading(false);
+        setIsLoadMoreLoading(false);
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
+        setIsLoadMoreLoading(false);
       });
   }, [offset]);
 
-  const handleOffsetChange = (newOffset) => {
-    if (newOffset >= 0 && newOffset < totalArticles) {
+  const handleLoadMore = () => {
+    const newOffset = offset + limit;
+    if (newOffset < totalArticles) {
       setOffset(newOffset);
-      if (articlesListRef.current) {
-        articlesListRef.current.scrollIntoView({ behavior: "smooth" });
-      }
     }
   };
 
@@ -86,12 +91,17 @@ export default function ArticlesPage() {
                   )}
                 />
               </div>
-              <Pagination
-                currentOffset={offset}
-                limit={limit}
-                totalArticles={totalArticles}
-                onOffsetChange={handleOffsetChange}
-              />
+              {articles.length < totalArticles && (
+                <div className="d-flex justify-content-center">
+                  <button
+                    className="btn btn-primary rounded-pill"
+                    onClick={handleLoadMore}
+                    disabled={isLoadMoreLoading}
+                  >
+                    {isLoadMoreLoading ? "Loading..." : "Load More"}
+                  </button>
+                </div>
+              )}
             </div>
             <div className="col-md-4">
               <div className="position-sticky">
