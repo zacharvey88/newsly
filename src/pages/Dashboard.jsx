@@ -28,15 +28,20 @@ export default function UserDashboard() {
   const [deleteMessage, setDeleteMessage] = useState("");
   const [isDeleteAll, setIsDeleteAll] = useState(false);
 
+  // useEffect(() => {
+  //   if (user) {
+  //     fetchUserArticles();
+  //     fetchUserComments();
+  //   } 
+  //   else {
+  //     window.location.href = '/login'; 
+  //   }
+  // }, [user]);
+
   useEffect(() => {
-    if (user) {
       fetchUserArticles();
       fetchUserComments();
-    } 
-    else {
-      window.location.href = '/login'; 
-    }
-  }, [user]);
+  }, []);
 
   const fetchUserArticles = async () => {
     try {
@@ -161,7 +166,7 @@ const confirmDelete = async (type, id) => {
 
   return (
     <div className="container dashboard-container">
-      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+      {/* {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} */}
 
       {/* Delete Confirmation Modal */}
       <DeleteConfirmation
@@ -195,7 +200,7 @@ const confirmDelete = async (type, id) => {
 
       <div className="row justify-content-center">
         <div className="col-lg-10">
-          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+          {/* {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} */}
 
           <div className="row">
             {/* Articles Section */}

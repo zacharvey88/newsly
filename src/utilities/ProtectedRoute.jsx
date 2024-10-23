@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (!user || !user.username) {
-    return <Navigate to="/login" state={{ from: location, message: "You must log in to submit an article" }} />;
+    return <Navigate to="/login" state={{ from: location, message: "You must log in first" }} />;
   }
 
   return children;
