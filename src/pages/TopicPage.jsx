@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ArticlesList from "../components/ArticlesList";
@@ -9,23 +9,30 @@ import queryString from 'query-string';
 export default () => {
   const [articles, setArticles] = useState([]);
   const { topic } = useParams();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState("");
   const [toggled, setToggled] = useState(false);
-  const urlParams = {};
-  const [isError, setIsError] = useState(false)
+  const [isError, setIsError] = useState(false);
+
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get("term");
 
   useEffect(() => {
-    let query = `https://nc-news-ngma.onrender.com/api/articles?topic=${topic}`;
+    let query = `https://nc-news-ngma.onrender.com/api/articles`;
+
+    if (topic) {
+      query += `?topic=${topic}`;
+    } else if (searchTerm) {
+      query += `?search=${searchTerm}`;
+    }
 
     if (sortBy) {
       query += `&sort_by=${sortBy}`;
-      urlParams.sort_by = sortBy;
     }
 
     if (toggled) {
       query += `&sort_dir=asc`;
-      urlParams.sort_dir = 'asc';
     }
 
     axios
@@ -33,32 +40,33 @@ export default () => {
       .then((response) => {
         setArticles(response.data.articles);
         setIsLoading(false);
-        setIsError(false)
+        setIsError(false);
       })
       .catch((err) => {
         console.log(err);
-        err.response.status === 404 ? setIsError(true) : null
-      })
+        err.response?.status === 404 ? setIsError(true) : null;
+      });
 
-      const url = queryString.stringify(urlParams);
-      window.history.pushState({}, '', `/${topic}/articles${url ? `?${url}` : ''}`);
+    const urlParams = { sort_by: sortBy, sort_dir: toggled ? 'asc' : 'desc' };
+    const url = queryString.stringify(urlParams);
+    window.history.pushState({}, '', `/${topic || "search"}${url ? `?${url}` : ''}`);
+  }, [topic, sortBy, toggled, searchTerm]);
 
-  }, [topic, sortBy, toggled]);
-
-  return isError ? <Navigate to="/not-found" state={"topic"}/> : ( 
-      isLoading ? (
-        <LoadingScreen />
-      ) : (
-        <section className="container">
-          <ResultsHeader
-            articles={articles}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            toggled={toggled}
-            setToggled={setToggled}
-          />
-          <ArticlesList articles={articles} />
-        </section>
-      )
+  return isError ? <Navigate to="/not-found" state={"topic"} /> : (
+    isLoading ? (
+      <LoadingScreen />
+    ) : (
+      <section className="container">
+        <ResultsHeader
+          articles={articles}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          toggled={toggled}
+          setToggled={setToggled}
+          searchTerm={searchTerm}
+        />
+        <ArticlesList articles={articles} />
+      </section>
     )
+  );
 };
