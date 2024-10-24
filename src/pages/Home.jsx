@@ -14,27 +14,34 @@ export default function ArticlesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
   const [totalArticles, setTotalArticles] = useState(0);
-  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false); // Handle 'load more' state
+  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false);
   const limit = 10;
-
   const articlesListRef = useRef(null);
 
-  // Fetch featured articles by votes (initial load)
   useEffect(() => {
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}`)
+      .get(`https://nc-news-ngma.onrender.com/api/articles?limit=${limit}`)
       .then((response) => {
         setTotalArticles(response.data.total_count);
-        setArticlesByVotes(response.data.articles);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setIsLoading(false);
       });
   }, []);
 
-  // Fetch featured articles by comment count (initial load)
+  useEffect(() => {
+    axios
+      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=3`)
+      .then((response) => {
+        setArticlesByVotes(response.data.articles);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   useEffect(() => {
     axios
       .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=comment_count&limit=3`)
@@ -42,11 +49,10 @@ export default function ArticlesPage() {
         setArticlesByCommentCount(response.data.articles);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }, []);
 
-  // Fetch articles with offset and append to the list
   useEffect(() => {
     if (offset === 0) {
       setIsLoading(true);
@@ -55,14 +61,14 @@ export default function ArticlesPage() {
     }
 
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=${limit}&offset=${offset}`)
+      .get(`https://nc-news-ngma.onrender.com/api/articles?limit=${limit}&offset=${offset}`)
       .then((response) => {
-        setArticles((prevArticles) => [...prevArticles, ...response.data.articles]); // Append new articles
+        setArticles((prevArticles) => [...prevArticles, ...response.data.articles]);
         setIsLoading(false);
         setIsLoadMoreLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setIsLoading(false);
         setIsLoadMoreLoading(false);
       });
@@ -95,13 +101,16 @@ export default function ArticlesPage() {
                 />
               </div>
 
-              {/* Load More Button */}
               {articles.length < totalArticles && (
-                <div className="d-flex justify-content-center mt-4">
+                <div className="d-flex justify-content-start mt-4">
                   <button
                     className="btn btn-primary rounded-pill"
                     onClick={handleLoadMore}
                     disabled={isLoadMoreLoading}
+                    style={{
+                      backgroundColor: "rgb(52, 82, 132)",
+                      borderColor: "rgb(52, 82, 132)",
+                    }}
                   >
                     {isLoadMoreLoading ? "Loading..." : "Load More"}
                   </button>
