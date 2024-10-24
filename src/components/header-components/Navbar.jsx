@@ -7,6 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import DropdownItem from 'react-bootstrap/DropdownItem';
+import "../../styles/Header.css"; // Assuming styles are in a separate file
 
 export default () => {
   const { user, setUser } = useContext(UserContext);
@@ -56,20 +57,17 @@ export default () => {
           </Link>
         </div>
         <div className="col-4 d-flex justify-content-end align-items-center">
-          {/* Search bar form with icon inside */}
-          <form onSubmit={handleSearch} className="search-form w-100">
-            <div className="input-group">
+          {/* Search bar form */}
+          <form onSubmit={handleSearch} className="search-form">
+            <div className="search-wrapper">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search articles..."
-                className="form-control search-input"
-                style={{ paddingRight: '2.5rem' }} // Add padding for the icon
+                className="search-input"
               />
-              <span className="input-group-text bg-white border-0 position-absolute" style={{ right: 0 }}>
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </span>
+              <i className="fa-solid fa-magnifying-glass search-icon"></i> {/* Embedded Magnifying Glass Icon */}
             </div>
           </form>
           {user.username ? (

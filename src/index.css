@@ -610,15 +610,30 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
   gap: 5px;
 } */
 
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .search-input {
-  padding-right: 2.5rem; /* Ensure space for the icon */
+  width: 100%;
+  padding: 8px 32px 8px 12px; /* Add padding-right to make space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 14px;
 }
 
-.input-group-text {
-  background-color: transparent;
-  border: none;
+.search-input:focus {
+  outline: none;
+  border-color: #888; /* Optional: change border color on focus */
 }
 
-.form-control:focus {
-  box-shadow: none;
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888; /* Optional: change color of the icon */
+  pointer-events: none; /* Makes sure the icon doesn't capture click events */
 }
+
