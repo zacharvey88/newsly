@@ -7,7 +7,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import DropdownItem from 'react-bootstrap/DropdownItem';
-import "../../styles/Header.css"; // Assuming styles are in a separate file
 
 export default () => {
   const { user, setUser } = useContext(UserContext);
