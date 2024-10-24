@@ -55,11 +55,11 @@ export default () => {
             </picture>
           </Link>
         </div>
-        <div className="col-4 d-flex justify-content-end align-items-center" style="gap:10px">
+        <div className="col-4 d-flex justify-content-end align-items-center nav-right">
           <form onSubmit={handleSearch} className="search-form">
             <div className="search-wrapper">
               <input
-                type="text"
+                type="text" 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search articles..."
@@ -79,7 +79,7 @@ export default () => {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <Link className="btn btn-sm btn-outline-secondary" style="border-radius:20px; padding-left:20px; padding-right:20px" to={"/login"}>
+            <Link className="btn btn-sm btn-outline-secondary login-btn" to={"/login"}>
               Login
             </Link>
           )}
