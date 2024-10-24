@@ -55,8 +55,7 @@ export default () => {
             </picture>
           </Link>
         </div>
-        <div className="col-4 d-flex justify-content-end align-items-center">
-          {/* Search bar form */}
+        <div className="col-4 d-flex justify-content-end align-items-center" style="gap:10px">
           <form onSubmit={handleSearch} className="search-form">
             <div className="search-wrapper">
               <input
@@ -66,7 +65,7 @@ export default () => {
                 placeholder="Search articles..."
                 className="search-input"
               />
-              <i className="fa-solid fa-magnifying-glass search-icon"></i> {/* Embedded Magnifying Glass Icon */}
+              <i className="fa-solid fa-magnifying-glass search-icon"></i> 
             </div>
           </form>
           {user.username ? (
@@ -80,7 +79,7 @@ export default () => {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <Link className="btn btn-sm btn-outline-secondary" to={"/login"}>
+            <Link className="btn btn-sm btn-outline-secondary" style="border-radius:20px; padding-left:20px; padding-right:20px" to={"/login"}>
               Login
             </Link>
           )}
