@@ -609,3 +609,16 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
   display: flex;
   gap: 5px;
 } */
+
+.search-input {
+  padding-right: 2.5rem; /* Ensure space for the icon */
+}
+
+.input-group-text {
+  background-color: transparent;
+  border: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
