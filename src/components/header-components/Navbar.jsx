@@ -56,15 +56,18 @@ export default () => {
           </Link>
         </div>
         <div className="col-4 d-flex justify-content-end align-items-center">
-          <form onSubmit={handleSearch} className="search-form">
+          {/* Search bar form */}
+          <form onSubmit={handleSearch} className="search-form d-flex align-items-center">
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search articles..."
-              className="search-input"
+              className="search-input form-control me-2"
             />
-            <button type="submit" className="btn btn-sm btn-outline-secondary">Search</button>
+            <button type="submit" className="btn btn-sm btn-outline-secondary">
+              <i className="fa-solid fa-magnifying-glass"></i> {/* Magnifying glass icon */}
+            </button>
           </form>
           {user.username ? (
             <Dropdown>

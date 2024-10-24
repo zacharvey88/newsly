@@ -104,7 +104,7 @@ export default function ArticlesPage() {
               {articles.length < totalArticles && (
                 <div className="d-flex justify-content-start mb-2">
                   <button
-                    className="btn btn-primary rounded-pill"
+                    className="btn btn-primary load-more-btn"
                     onClick={handleLoadMore}
                     disabled={isLoadMoreLoading}
                     style={{
