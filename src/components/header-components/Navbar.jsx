@@ -65,14 +65,7 @@ export default () => {
                 placeholder="Search articles..."
                 className="search-input"
               />
-              <button 
-                type="button"
-                onClick={handleSearch}
-                className="search-button"
-                aria-label="Search"
-              >
-                <i className="fa-solid fa-magnifying-glass search-icon"></i>
-              </button>
+              <i className="fa-solid fa-magnifying-glass search-icon" onClick={handleSearch}></i> 
             </div>
           </form>
           {user.username ? (
