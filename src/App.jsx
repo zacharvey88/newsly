@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Header from './components/Header';
 import Home from './pages/Home';
 import ArticlePage from './pages/ArticlePage';
-import TopicPage from './pages/TopicPage';
+import ResultsPage from './pages/ResultsPage';
 import Footer from './components/Footer';
 import NotFound from './pages/NotFound';
 import ArticleForm from './pages/ArticleForm';
@@ -22,8 +22,9 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/not-found" element={<NotFound />} />
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/articles" element={<ResultsPage />} />
           <Route exact path="/articles/:article_id" element={<ArticlePage />} />
-          <Route exact path="/:topic/articles" element={<TopicPage />} />
+          <Route exact path="/:topic/articles" element={<ResultsPage />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/new-article" element={<ProtectedRoute><ArticleForm /></ProtectedRoute>} />
           <Route exact path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
