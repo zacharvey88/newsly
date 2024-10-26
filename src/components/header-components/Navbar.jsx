@@ -21,7 +21,7 @@ export default () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(`/api/articles?search=${searchTerm}`);
+      navigate(`/articles?search=${searchTerm}`);
     }
   };
 
@@ -65,7 +65,7 @@ export default () => {
                 placeholder="Search articles..."
                 className="search-input"
               />
-              <i className="fa-solid fa-magnifying-glass search-icon" onClick={handleSearch}></i> 
+              <i className="fa-solid fa-magnifying-glass search-icon"></i> 
             </div>
           </form>
           {user.username ? (
