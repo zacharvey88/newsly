@@ -21,7 +21,7 @@ export default () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(`/search?term=${searchTerm}`);
+      navigate(`/?search=${searchTerm}`);
     }
   };
 
