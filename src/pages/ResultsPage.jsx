@@ -16,7 +16,7 @@ export default () => {
   const [isError, setIsError] = useState(false);
 
   const searchParams = new URLSearchParams(location.search);
-  const searchTerm = searchParams.get("term");
+  const searchTerm = searchParams.get("search");
 
   useEffect(() => {
     let query = `https://nc-news-ngma.onrender.com/api/articles`;
@@ -24,7 +24,7 @@ export default () => {
     if (topic) {
       query += `?topic=${topic}`;
     } else if (searchTerm) {
-      query += `?search=${searchTerm}`;
+      query += `?search=${searchTerm}`; 
     }
 
     if (sortBy) {
@@ -52,7 +52,9 @@ export default () => {
     window.history.pushState({}, '', `/${topic || "search"}${url ? `?${url}` : ''}`);
   }, [topic, sortBy, toggled, searchTerm]);
 
-  return isError ? <Navigate to="/not-found" state={"topic"} /> : (
+  return isError ? (
+    <Navigate to="/not-found" state={"topic"} />
+  ) : (
     isLoading ? (
       <LoadingScreen />
     ) : (
