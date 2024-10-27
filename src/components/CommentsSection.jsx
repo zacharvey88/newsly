@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
-import { UserContext } from "../contexts/User";
+import { UserContext } from "../contexts/UserContext";
 
 export default ({ article_id }) => {
   const [comments, setComments] = useState([]);
