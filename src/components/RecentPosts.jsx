@@ -1,8 +1,9 @@
   import { Link } from "react-router-dom";
+import LoadingScreen from "../utilities/LoadingScreen";
 
   export default ({ articles }) => {
     if (!articles) {
-      return <h3>Loading...</h3>;
+      return <LoadingScreen/>;
     }
 
     return (
