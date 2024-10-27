@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/newsly-logo.png";
 import icon from "../../assets/newsly-icon.png";
 import { useContext, useState } from "react";
-import { UserContext } from "../../contexts/User";
+import { UserContext } from "../../contexts/UserContext";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
