@@ -1,6 +1,6 @@
 import React from "react";
 import { useModal } from "../contexts/ModalContext";
-import ArticleForm from "./ArticleForm"; 
+import ArticleForm from "../pages/ArticleForm"; 
 
 const Modal = () => {
   const { modalContent, closeModal } = useModal();
