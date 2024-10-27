@@ -1,76 +1,60 @@
 import axios from "axios";
-import { useState, useContext, useEffect } from "react";
-import { UserContext } from "../contexts/User";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; 
-import { useNavigate } from "react-router-dom";
 
-
-export default () => {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState(""); 
-  const [topic, setTopic] = useState("");
-  const [articleImgUrl, setArticleImgUrl] = useState("");
+export default function ArticleForm({
+  initialData = {},
+  onSubmit,
+  isEditMode = false,
+  contentType = "article",
+}) {
+  const [title, setTitle] = useState(initialData.title || "");
+  const [body, setBody] = useState(initialData.body || "");
+  const [topic, setTopic] = useState(initialData.topic || "");
+  const [articleImgUrl, setArticleImgUrl] = useState(initialData.articleImgUrl || "");
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [topics, setTopics] = useState([]);
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-
 
   useEffect(() => {
-    axios
-      .get("https://nc-news-ngma.onrender.com/api/topics")
-      .then((response) => {
-        setTopics(response.data.topics);
-      })
-      .catch((error) => {
-        setErrorMessage("Error fetching topics.");
-      });
-  }, []);
+    if (contentType === "article") {
+      axios
+        .get("https://nc-news-ngma.onrender.com/api/topics")
+        .then((response) => setTopics(response.data.topics))
+        .catch(() => setErrorMessage("Error fetching topics."));
+    }
+  }, [contentType]);
 
-  const handleSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    setSuccessMessage("");
     setErrorMessage("");
 
     const cleanedBody = body.replace(/<p><br><\/p>/g, "").replace(/<p>\s*<\/p>/g, "");
 
-    const articleData = {
-      title,
+    const formData = {
+      title: contentType === "article" ? title : undefined,
       author: user.username,
       body: cleanedBody,
-      topic,
-      article_img_url: articleImgUrl ? articleImgUrl : null,
+      topic: contentType === "article" ? topic : undefined,
+      article_img_url: contentType === "article" ? (articleImgUrl || null) : undefined,
     };
 
-    axios
-      .post("https://nc-news-ngma.onrender.com/api/articles", articleData)
-      .then((response) => {
-        setLoading(false);
-        setSuccessMessage("Article posted successfully!");
-        setTitle("");
-        setBody(""); 
-        setTopic("");
-        setArticleImgUrl("");
-        const newArticleId = response.data.article.article_id;
-        navigate(`/articles/${newArticleId}`);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setErrorMessage("Error posting article. Please try again.");
-      });
+    try {
+      await onSubmit(formData);
+    } catch {
+      setErrorMessage("Error submitting. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="border p-4 rounded shadow-sm"
-        style={{ width: "100%", maxWidth: "600px" }}
-      >
+    <form onSubmit={handleFormSubmit} className="border p-4 rounded shadow-sm" style={{ width: "100%", maxWidth: "600px" }}>
+      {contentType === "article" && (
         <div className="mb-3">
           <label className="form-label">Title:</label>
           <input
@@ -79,58 +63,62 @@ export default () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Body:</label>
-          <ReactQuill
-            theme="snow"
-            value={body}
-            onChange={setBody}
-            className="quill-editor"
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Topic:</label>
-          <select
-            className="form-control form-control-sm"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            required
-          >
-            <option value="">Select a topic</option>
-            {topics.map((topicItem) => (
-              <option key={topicItem.slug} value={topicItem.slug}>
-                {`${topicItem.slug.slice(0,1).toUpperCase()}${topicItem.slug.slice(1,topicItem.slug.length)}`}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Article Image URL (optional):</label>
-          <input
-            type="url"
-            className="form-control form-control-sm"
-            value={articleImgUrl}
-            onChange={(e) => setArticleImgUrl(e.target.value)}
-          />
-        </div>
-
-        <div className="text-center">
-          <input
-            type="submit"
-            className="btn btn-sm btn-outline-secondary w-auto"
-            value="Submit Article"
             disabled={loading}
           />
         </div>
+      )}
 
-        {successMessage && <p className="text-success mt-3">{successMessage}</p>}
-        {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
-      </form>
-    </div>
+      <div className="mb-3">
+        <label className="form-label">Body:</label>
+        <ReactQuill
+          theme="snow"
+          value={body}
+          onChange={setBody}
+          className="quill-editor"
+          readOnly={loading}
+        />
+      </div>
+
+      {contentType === "article" && (
+        <>
+          <div className="mb-3">
+            <label className="form-label">Topic:</label>
+            <select
+              className="form-control form-control-sm"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              required
+              disabled={loading}
+            >
+              <option value="">Select a topic</option>
+              {topics.map((topicItem) => (
+                <option key={topicItem.slug} value={topicItem.slug}>
+                  {`${topicItem.slug.charAt(0).toUpperCase()}${topicItem.slug.slice(1)}`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Article Image URL (optional):</label>
+            <input
+              type="url"
+              className="form-control form-control-sm"
+              value={articleImgUrl}
+              onChange={(e) => setArticleImgUrl(e.target.value)}
+              disabled={loading}
+            />
+          </div>
+        </>
+      )}
+
+      <div className="text-center">
+        <button type="submit" className="btn btn-sm btn-outline-secondary w-auto" disabled={loading}>
+          {isEditMode ? "Save Changes" : "Submit Article"}
+        </button>
+      </div>
+
+      {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
+    </form>
   );
-};
+}

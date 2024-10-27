@@ -5,11 +5,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App.jsx'
 import './index.css'
 import { UserProvider } from './contexts/User.jsx';
+import Modal from './components/Modal.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <UserProvider>
-      <App />
+      <ModalProvider>
+        <App />
+        <Modal />
+      </ModalProvider>
     </UserProvider>
   </BrowserRouter>
 )

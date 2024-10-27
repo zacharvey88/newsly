@@ -7,11 +7,13 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import DropdownItem from 'react-bootstrap/DropdownItem';
+import { useModal } from "../../contexts/ModalContext"; 
 
 export default () => {
   const { user, setUser } = useContext(UserContext);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { openModal } = useModal(); 
 
   const handleLogout = () => {
     setUser({});
@@ -25,13 +27,19 @@ export default () => {
     }
   };
 
+  const handleCreateArticle = () => {
+    openModal({}, "article", false);
+  };
+
   return (
     <header className="border-bottom lh-1 py-3">
       <div className="row flex-nowrap justify-content-between align-items-center">
         <div className="col-4 pt-1 main-nav">
           <div className="main-nav-links">
             <Link className="link-secondary" to="/"><i className="fa-solid fa-house"></i> Home</Link>
-            <Link className="link-secondary" to="/new-article"><i className="fa-solid fa-file-pen"></i> Submit an article</Link>
+            <button className="link-secondary" onClick={handleCreateArticle}>
+              <i className="fa-solid fa-file-pen"></i> Submit an article
+            </button>
           </div>
           <Dropdown className="main-nav-toggle">
             <DropdownToggle as={Link}>
@@ -42,7 +50,7 @@ export default () => {
                 <Link to="/">Home</Link>
               </DropdownItem>
               <DropdownItem>
-                <Link to="/new-article">Submit an article</Link>
+                <button onClick={handleCreateArticle}>Submit an article</button>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -71,7 +79,7 @@ export default () => {
           {user.username ? (
             <Dropdown>
               <DropdownToggle as={Link}>
-                <img className="nav-user-avatar rounded-circle" src={user.avatar_url} />
+                <img className="nav-user-avatar rounded-circle" src={user.avatar_url} alt="User Avatar" />
               </DropdownToggle>
               <DropdownMenu>
                 <DropdownItem onClick={() => navigate(`/dashboard`)}>Dashboard</DropdownItem>
