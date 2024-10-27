@@ -6,6 +6,7 @@ import App from './App.jsx'
 import './index.css'
 import { UserProvider } from './contexts/UserContext.jsx';
 import Modal from './components/Modal.jsx';
+import { ModalProvider } from './contexts/ModalContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
