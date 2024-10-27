@@ -1,195 +1,128 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
-import { UserContext } from "../contexts/User";
+import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import LoadingScreen from "../utilities/LoadingScreen";
 import DOMPurify from "dompurify";
-import DeleteConfirmation from "../utilities/DeleteModal"; 
+import DeleteConfirmation from "../utilities/DeleteModal";
+import { useModal } from "../contexts/ModalContext"; 
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
+  const { openModal } = useModal(); 
   const [articles, setArticles] = useState([]);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [articleSortBy, setArticleSortBy] = useState('created_at');
-  const [articleSortOrder, setArticleSortOrder] = useState('desc');
-  const [commentSortBy, setCommentSortBy] = useState('created_at');
-  const [commentSortOrder, setCommentSortOrder] = useState('desc');
-
-  const [articleDisplayCount, setArticleDisplayCount] = useState(10);
-  const [commentDisplayCount, setCommentDisplayCount] = useState(10);
+  const [articleSort, setArticleSort] = useState({ by: 'created_at', order: 'desc', displayCount: 10 });
+  const [commentSort, setCommentSort] = useState({ by: 'created_at', order: 'desc', displayCount: 10 });
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [deleteType, setDeleteType] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
   const [isDeleteAll, setIsDeleteAll] = useState(false);
-  
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editType, setEditType] = useState(null);
-  const [editContent, setEditContent] = useState("");
-  const [editId, setEditId] = useState(null);  
 
   useEffect(() => {
-    fetchUserArticles();
-    fetchUserComments();
+    const fetchData = async () => {
+      await Promise.all([fetchUserArticles(), fetchUserComments()]);
+      setLoading(false);
+    };
+
+    fetchData();
   }, []);
-
-  const openEditModal = (type, content, id) => {
-    setEditType(type);
-    setEditContent(content);
-    setEditId(id);
-    setShowEditModal(true);
-  };
-
-  const handleEditSave = async () => {
-    try {
-      if (editType === "article") {
-        await axios.patch(`https://nc-news-ngma.onrender.com/api/articles/${editId}`, { body: editContent });
-        setArticles(articles.map((article) =>
-          article.article_id === editId ? { ...article, body: editContent } : article
-        ));
-      } else if (editType === "comment") {
-        await axios.patch(`https://nc-news-ngma.onrender.com/api/comments/${editId}`, { body: editContent });
-        setComments(comments.map((comment) =>
-          comment.comment_id === editId ? { ...comment, body: editContent } : comment
-        ));
-      }
-    } catch (error) {
-      setErrorMessage("Error saving changes.");
-    } finally {
-      setShowEditModal(false);
-    }
-  };
-  
 
   const fetchUserArticles = async () => {
     try {
-      const response = await axios.get(
-        `https://nc-news-ngma.onrender.com/api/articles?author=${user.username}`
-      );
+      const response = await axios.get(`https://nc-news-ngma.onrender.com/api/articles?author=${user.username}`);
       setArticles(response.data.articles);
     } catch (error) {
       setErrorMessage("There was a problem loading your dashboard. Please try refreshing the page.");
-    } finally {
-      setLoading(false);
     }
   };
 
   const fetchUserComments = async () => {
     try {
-      const response = await axios.get(
-        `https://nc-news-ngma.onrender.com/api/users/${user.username}/comments`
-      );
+      const response = await axios.get(`https://nc-news-ngma.onrender.com/api/users/${user.username}/comments`);
       setComments(response.data.comments);
     } catch (error) {
       setErrorMessage("Error fetching your comments.");
     }
   };
 
-const handleDeleteArticle = async (articleId) => {
-  try {
-    await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
-    setArticles(articles.filter((article) => article.article_id !== articleId));
-  } catch (error) {
-    setErrorMessage("Error deleting article.");
-  }
-};
+  const handleEdit = (article, type) => {
+    openModal(article, type, true);
+  };
 
-const handleDeleteComment = async (commentId) => {
-  try {
-    await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
-    setComments(comments.filter((comment) => comment.comment_id !== commentId));
-  } catch (error) {
-    setErrorMessage("Error deleting comment.");
-  }
-};
-
-const handleDeleteAllArticles = () => {
-  openDeleteModal('article', null, <>Are you sure you want to delete <strong>ALL</strong> articles?</>, true);
-};
-
-const handleDeleteAllComments = () => {
-  openDeleteModal('comment', null, <>Are you sure you want to delete <strong>ALL</strong> comments?</>, true);
-};
-
-const openDeleteModal = (type, id, message, isDeleteAll = false) => {
-  setDeleteType(type);
-  setDeleteId(id);
-  setDeleteMessage(message);
-  setIsDeleteAll(isDeleteAll);
-  setShowDeleteModal(true);
-};
-
-const confirmDelete = async (type, id) => {
-  setShowDeleteModal(false);
-
-  try {
-    if (isDeleteAll) {
+  const handleDelete = async (type, id) => {
+    try {
+      const url = type === 'article' ? `https://nc-news-ngma.onrender.com/api/articles/${id}` : `https://nc-news-ngma.onrender.com/api/comments/${id}`;
+      await axios.delete(url);
       if (type === 'article') {
-        await Promise.all(
-          articles.map((article) =>
-            axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)
-          )
-        );
+        setArticles(articles.filter((article) => article.article_id !== id));
+      } else {
+        setComments(comments.filter((comment) => comment.comment_id !== id));
+      }
+    } catch (error) {
+      setErrorMessage(`Error deleting ${type}.`);
+    }
+  };
+
+  const handleDeleteAll = async (type) => {
+    try {
+      const ids = type === 'article' ? articles.map(article => article.article_id) : comments.map(comment => comment.comment_id);
+      await Promise.all(ids.map(id => handleDelete(type, id)));
+      if (type === 'article') {
         setArticles([]);
-      } else if (type === 'comment') {
-        await Promise.all(
-          comments.map((comment) =>
-            axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)
-          )
-        );
+      } else {
         setComments([]);
       }
-    } else {
-      if (type === 'article') {
-        await handleDeleteArticle(id);
-      } else if (type === 'comment') {
-        await handleDeleteComment(id);
-      }
+    } catch (error) {
+      setErrorMessage(`Error deleting all ${type}s.`);
     }
-  } catch (error) {
-    setErrorMessage("Error deleting items.");
-  }
-};
-
-
-  const loadMoreArticles = () => {
-    setArticleDisplayCount(articleDisplayCount + 10);
   };
 
-  const loadMoreComments = () => {
-    setCommentDisplayCount(commentDisplayCount + 10);
+  const openDeleteModal = (type, id, message, isDeleteAll = false) => {
+    setDeleteType(type);
+    setDeleteId(id);
+    setDeleteMessage(message);
+    setIsDeleteAll(isDeleteAll);
+    setShowDeleteModal(true);
   };
 
-  const sortArticles = (articles) => {
-    return [...articles].sort((a, b) => {
-      if (articleSortOrder === 'asc') {
-        return a[articleSortBy] > b[articleSortBy] ? 1 : -1;
-      } else {
-        return a[articleSortBy] < b[articleSortBy] ? 1 : -1;
-      }
+  const confirmDelete = async () => {
+    setShowDeleteModal(false);
+    if (isDeleteAll) {
+      await handleDeleteAll(deleteType);
+    } else {
+      await handleDelete(deleteType, deleteId);
+    }
+  };
+
+  const loadMore = (type) => {
+    if (type === 'article') {
+      setArticleSort(prev => ({ ...prev, displayCount: prev.displayCount + 10 }));
+    } else {
+      setCommentSort(prev => ({ ...prev, displayCount: prev.displayCount + 10 }));
+    }
+  };
+
+  const sortItems = (items, { by, order }) => {
+    return [...items].sort((a, b) => {
+      const comparison = order === 'asc' ? a[by] > b[by] : a[by] < b[by];
+      return comparison ? 1 : -1;
     });
   };
 
-  const sortComments = (comments) => {
-    return [...comments].sort((a, b) => {
-      if (commentSortOrder === 'asc') {
-        return a[commentSortBy] > b[commentSortBy] ? 1 : -1;
-      } else {
-        return a[commentSortBy] < b[commentSortBy] ? 1 : -1;
-      }
-    });
-  };
+  const sortedArticles = sortItems(articles, articleSort).slice(0, articleSort.displayCount);
+  const sortedComments = sortItems(comments, commentSort).slice(0, commentSort.displayCount);
 
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="container dashboard-container">
-
       <DeleteConfirmation
         showModal={showDeleteModal}
         hideModal={() => setShowDeleteModal(false)}
@@ -197,39 +130,8 @@ const confirmDelete = async (type, id) => {
         id={deleteId}
         type={deleteType}
         message={deleteMessage}
-        isDeleteAll={isDeleteAll} 
+        isDeleteAll={isDeleteAll}
       />
-
-      {/* Edit Modal */}
-      <div className={`modal fade ${showEditModal ? 'show' : ''}`} id="editModal" tabIndex="-1" role="dialog" style={{ display: showEditModal ? 'block' : 'none' }} aria-labelledby="editModalTitle" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="editModalTitle">
-                {editType === "article" ? "Edit Article" : "Edit Comment"}
-              </h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" onClick={() => setShowEditModal(false)} aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <textarea
-                className="form-control"
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                rows="5"
-              />
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
-                Close
-              </button>
-              <button type="button" className="btn btn-primary" onClick={handleEditSave}>
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
 
       <div className="row justify-content-center">
         <div className="col-lg-10">
@@ -241,90 +143,29 @@ const confirmDelete = async (type, id) => {
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Articles</h4>
                   <div className="d-flex align-items-center">
-                  {articles.length > 0 && (
-                    <button
-                      className="btn btn-outline-danger btn-sm me-3"
-                      onClick={() => handleDeleteAllArticles()}
-                    >
-                      Delete All
-                    </button>
-                  )}
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-secondary btn-sm dropdown-toggle"
-                        type="button"
-                        id="articleSortDropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Sort By
+                    {articles.length > 0 && (
+                      <button className="btn btn-outline-danger btn-sm me-3" onClick={() => openDeleteModal('article', null, <>Are you sure you want to delete <strong>ALL</strong> articles?</>, true)}>
+                        Delete All
                       </button>
-                      <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date {articleSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('votes')}>Likes {articleSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
-                        <div className="dropdown-divider"></div>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending {articleSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
-                      </ul>
-                    </div>
+                    )}
+                    <SortDropdown setSort={setArticleSort} sortState={articleSort} type="article" />
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {sortArticles(articles).slice(0, articleDisplayCount).length > 0 ? (
-                    sortArticles(articles).slice(0, articleDisplayCount).map((article) => (
-                      <li key={article.article_id} className="list-group-item">
-                        <div className="article-meta mb-1 d-flex justify-content-between align-items-center">
-                          <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
-                          <Link to={`/articles/${article.article_id}`} className="ms-auto">
-                            <i className="fas fa-link" style={{ color: '#345284' }}></i>
-                          </Link>
-                        </div>
-                        <div>
-                          {article.title}
-                        </div>
-                        <div className="article-preview text-muted small"
-                            dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(article.body.length > 150 ? article.body.substring(0, 150) + '...' : article.body),
-                        }}>
-                        </div>
-                        <div className="mt-2 d-flex justify-content-between align-items-center">
-                          <div>
-                            <span className="me-3">
-                              <i className="fas fa-message" style={{ color: '#345284' }}></i> {article.comment_count}
-                              <i className="fas fa-thumbs-up ms-3" style={{ color: '#345284' }}></i> {article.votes}
-                            </span>
-                          </div>
-                          <div>
-                            <button
-                            className="btn btn-outline-secondary btn-sm me-2"
-                            onClick={() => openEditModal('article', article.body, article.article_id)}
-                            >
-                            <i className="fas fa-edit"></i>
-                            </button>
-                            <button
-                              className="btn btn-outline-danger btn-sm"
-                              onClick={() => 
-                                openDeleteModal('article', article.article_id, `Are you sure you want to delete this article?`)}
-                            >
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </li>
+                  {sortedArticles.length > 0 ? (
+                    sortedArticles.map((article) => (
+                      <ArticleListItem 
+                        key={article.article_id} 
+                        article={article} 
+                        openDeleteModal={openDeleteModal} 
+                        openEditModal={() => handleEdit(article, 'article')} // Pass the article data
+                      />
                     ))
                   ) : (
                     <li className="list-group-item text-muted">No articles available.</li>
                   )}
                 </ul>
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
-                  {articles.length > articleDisplayCount && (
-                    <button className="btn btn-primary" onClick={loadMoreArticles}>
-                      Load More
-                    </button>
-                  )}
-                </div>
+                <CardFooter displayCount={articleSort.displayCount} totalCount={articles.length} loadMore={() => loadMore('article')} />
               </div>
             </div>
 
@@ -334,86 +175,32 @@ const confirmDelete = async (type, id) => {
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4>Your Comments</h4>
                   <div className="d-flex align-items-center">
-                  {comments.length > 0 && (
-                    <button
-                      className="btn btn-outline-danger btn-sm me-3"
-                      onClick={() => handleDeleteAllComments()}
-                    >
-                      Delete All
-                    </button>
-                  )}
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-secondary btn-sm dropdown-toggle"
-                        type="button"
-                        id="comment Dropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Sort By
+                    {comments.length > 0 && (
+                      <button className="btn btn-outline-danger btn-sm me-3" onClick={() => openDeleteModal('comment', null, <>Are you sure you want to delete <strong>ALL</strong> comments?</>, true)}>
+                        Delete All
                       </button>
-                      <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
-                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date {commentSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('votes')}>Likes {commentSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
-                        <div className="dropdown-divider"></div>
-                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending {commentSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
-                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending {commentSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
-                      </ul>
-                    </div>
+                    )}
+                    <SortDropdown setSort={setCommentSort} sortState={commentSort} type="comment" />
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {sortComments(comments).slice(0, commentDisplayCount).length > 0 ? (
-                    sortComments(comments).slice(0, commentDisplayCount).map((comment) => (
-                      <li key={comment.comment_id} className="list-group-item">
-                        <div className="comment-meta mb-1 d-flex justify-content-between align-items-center">
-                          <span className="text-muted small">Commented on {moment(comment.created_at).format("DD MMM YYYY")}</span>
-                          <Link to={`/articles/${comment.article_id}`} className="ms-auto">
-                            <i className="fas fa-link" style={{ color: '#345284' }}></i>
-                          </Link>
-                        </div>
-                        <div>
-                          {comment.body.length > 150 ? comment.body.substring(0, 150) + '...' : comment.body}
-                        </div>
-                        <div className="mt-2 d-flex justify-content-between align-items-center">
-                          <div>
-                            <span>
-                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {comment.votes}
-                            </span>
-                          </div>
-                          <div>
-                            <button
-                              className="btn btn-outline-secondary btn-sm me-2"
-                              onClick={() => openEditModal('comment', comment.body, comment.comment_id)}
-                            >
-                              <i className="fas fa-edit"></i>
-                            </button>
-                            <button
-                              className="btn btn-outline-danger btn-sm"
-                              onClick={() => 
-                                openDeleteModal('comment', comment.comment_id, `Are you sure you want to delete this comment?`)
-                              }
-                            >
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </li>
+                  {sortedComments.length > 0 ? (
+                    sortedComments.map((comment) => (
+                      <CommentListItem 
+                        key={comment.comment_id} 
+                        comment={comment} 
+                        openDeleteModal={openDeleteModal} 
+                        handleEdit={() => handleEdit(comment, 'comment')} 
+                      />
                     ))
                   ) : (
                     <li className="list-group-item text-muted">No comments available.</li>
                   )}
                 </ul>
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
-                  {comments.length > commentDisplayCount && (
-                    <button className="btn btn-primary" onClick={loadMoreComments}>
-                      Load More
-                    </button>
-                  )}
-                </div>
+                <CardFooter displayCount={commentSort.displayCount} totalCount={comments.length} loadMore={() => loadMore('comment')} />
               </div>
             </div>
+
           </div>
         </div>
       </div>
