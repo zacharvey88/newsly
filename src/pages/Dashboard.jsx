@@ -14,15 +14,57 @@ export default function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // New state for modal editing
+  const [articleSortBy, setArticleSortBy] = useState('created_at');
+  const [articleSortOrder, setArticleSortOrder] = useState('desc');
+  const [commentSortBy, setCommentSortBy] = useState('created_at');
+  const [commentSortOrder, setCommentSortOrder] = useState('desc');
+
+  const [articleDisplayCount, setArticleDisplayCount] = useState(10);
+  const [commentDisplayCount, setCommentDisplayCount] = useState(10);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteType, setDeleteType] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState("");
+  const [isDeleteAll, setIsDeleteAll] = useState(false);
+  
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editType, setEditType] = useState(null); // 'article' or 'comment'
-  const [editData, setEditData] = useState(null); // Holds the current article/comment data
+  const [editType, setEditType] = useState(null);
+  const [editContent, setEditContent] = useState("");
+  const [editId, setEditId] = useState(null);  
 
   useEffect(() => {
-      fetchUserArticles();
-      fetchUserComments();
+    fetchUserArticles();
+    fetchUserComments();
   }, []);
+
+  const openEditModal = (type, content, id) => {
+    setEditType(type);
+    setEditContent(content);
+    setEditId(id);
+    setShowEditModal(true);
+  };
+
+  const handleEditSave = async () => {
+    try {
+      if (editType === "article") {
+        await axios.patch(`https://nc-news-ngma.onrender.com/api/articles/${editId}`, { body: editContent });
+        setArticles(articles.map((article) =>
+          article.article_id === editId ? { ...article, body: editContent } : article
+        ));
+      } else if (editType === "comment") {
+        await axios.patch(`https://nc-news-ngma.onrender.com/api/comments/${editId}`, { body: editContent });
+        setComments(comments.map((comment) =>
+          comment.comment_id === editId ? { ...comment, body: editContent } : comment
+        ));
+      }
+    } catch (error) {
+      setErrorMessage("Error saving changes.");
+    } finally {
+      setShowEditModal(false);
+    }
+  };
+  
 
   const fetchUserArticles = async () => {
     try {
@@ -48,145 +90,331 @@ export default function UserDashboard() {
     }
   };
 
-  // Function to open edit modal and set the item to edit
-  const openEditModal = (type, itemData) => {
-    setEditType(type);
-    setEditData(itemData);
-    setShowEditModal(true);
+const handleDeleteArticle = async (articleId) => {
+  try {
+    await axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${articleId}`);
+    setArticles(articles.filter((article) => article.article_id !== articleId));
+  } catch (error) {
+    setErrorMessage("Error deleting article.");
+  }
+};
+
+const handleDeleteComment = async (commentId) => {
+  try {
+    await axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${commentId}`);
+    setComments(comments.filter((comment) => comment.comment_id !== commentId));
+  } catch (error) {
+    setErrorMessage("Error deleting comment.");
+  }
+};
+
+const handleDeleteAllArticles = () => {
+  openDeleteModal('article', null, <>Are you sure you want to delete <strong>ALL</strong> articles?</>, true);
+};
+
+const handleDeleteAllComments = () => {
+  openDeleteModal('comment', null, <>Are you sure you want to delete <strong>ALL</strong> comments?</>, true);
+};
+
+const openDeleteModal = (type, id, message, isDeleteAll = false) => {
+  setDeleteType(type);
+  setDeleteId(id);
+  setDeleteMessage(message);
+  setIsDeleteAll(isDeleteAll);
+  setShowDeleteModal(true);
+};
+
+const confirmDelete = async (type, id) => {
+  setShowDeleteModal(false);
+
+  try {
+    if (isDeleteAll) {
+      if (type === 'article') {
+        await Promise.all(
+          articles.map((article) =>
+            axios.delete(`https://nc-news-ngma.onrender.com/api/articles/${article.article_id}`)
+          )
+        );
+        setArticles([]);
+      } else if (type === 'comment') {
+        await Promise.all(
+          comments.map((comment) =>
+            axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment.comment_id}`)
+          )
+        );
+        setComments([]);
+      }
+    } else {
+      if (type === 'article') {
+        await handleDeleteArticle(id);
+      } else if (type === 'comment') {
+        await handleDeleteComment(id);
+      }
+    }
+  } catch (error) {
+    setErrorMessage("Error deleting items.");
+  }
+};
+
+
+  const loadMoreArticles = () => {
+    setArticleDisplayCount(articleDisplayCount + 10);
   };
 
-  // Function to handle form submission
-  const handleSaveChanges = async () => {
-    try {
-      if (editType === "article") {
-        await axios.patch(`https://nc-news-ngma.onrender.com/api/articles/${editData.article_id}`, {
-          title: editData.title,
-          body: editData.body,
-          article_img_url: editData.article_img_url
-        });
-        fetchUserArticles();
-      } else if (editType === "comment") {
-        await axios.patch(`https://nc-news-ngma.onrender.com/api/comments/${editData.comment_id}`, {
-          body: editData.body
-        });
-        fetchUserComments();
+  const loadMoreComments = () => {
+    setCommentDisplayCount(commentDisplayCount + 10);
+  };
+
+  const sortArticles = (articles) => {
+    return [...articles].sort((a, b) => {
+      if (articleSortOrder === 'asc') {
+        return a[articleSortBy] > b[articleSortBy] ? 1 : -1;
+      } else {
+        return a[articleSortBy] < b[articleSortBy] ? 1 : -1;
       }
-      setShowEditModal(false);
-    } catch (error) {
-      setErrorMessage("Error updating the item.");
-    }
+    });
+  };
+
+  const sortComments = (comments) => {
+    return [...comments].sort((a, b) => {
+      if (commentSortOrder === 'asc') {
+        return a[commentSortBy] > b[commentSortBy] ? 1 : -1;
+      } else {
+        return a[commentSortBy] < b[commentSortBy] ? 1 : -1;
+      }
+    });
   };
 
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="container dashboard-container">
-      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+
+      <DeleteConfirmation
+        showModal={showDeleteModal}
+        hideModal={() => setShowDeleteModal(false)}
+        confirmModal={confirmDelete}
+        id={deleteId}
+        type={deleteType}
+        message={deleteMessage}
+        isDeleteAll={isDeleteAll} 
+      />
 
       {/* Edit Modal */}
-      {showEditModal && (
-        <div className="modal fade show" style={{ display: "block" }}>
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit {editType === "article" ? "Article" : "Comment"}</h5>
-                <button type="button" className="btn-close" onClick={() => setShowEditModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                {editType === "article" ? (
-                  <>
-                    <div className="mb-3">
-                      <label className="form-label">Title</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editData.title || ""}
-                        onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Body</label>
-                      <textarea
-                        className="form-control"
-                        rows="4"
-                        value={editData.body || ""}
-                        onChange={(e) => setEditData({ ...editData, body: e.target.value })}
-                      ></textarea>
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Image URL</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editData.article_img_url || ""}
-                        onChange={(e) => setEditData({ ...editData, article_img_url: e.target.value })}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className="mb-3">
-                    <label className="form-label">Comment</label>
-                    <textarea
-                      className="form-control"
-                      rows="4"
-                      value={editData.body || ""}
-                      onChange={(e) => setEditData({ ...editData, body: e.target.value })}
-                    ></textarea>
-                  </div>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>
-                  Save changes
-                </button>
-              </div>
+      <div className={`modal fade ${showEditModal ? 'show' : ''}`} id="editModal" tabIndex="-1" role="dialog" style={{ display: showEditModal ? 'block' : 'none' }} aria-labelledby="editModalTitle" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="editModalTitle">
+                {editType === "article" ? "Edit Article" : "Edit Comment"}
+              </h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" onClick={() => setShowEditModal(false)} aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <textarea
+                className="form-control"
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                rows="5"
+              />
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
+                Close
+              </button>
+              <button type="button" className="btn btn-primary" onClick={handleEditSave}>
+                Save changes
+              </button>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="row">
-        {/* Articles Section */}
-        <div className="col-md-6">
-          <h4>Your Articles</h4>
-          <ul>
-            {articles.map((article) => (
-              <li key={article.article_id}>
-                <div>
-                  {article.title}
-                  <button
-                    onClick={() => openEditModal("article", article)}
-                    data-bs-toggle="modal" data-bs-target="#editModal"
-                  >
-                    Edit
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
 
-        {/* Comments Section */}
-        <div className="col-md-6">
-          <h4>Your Comments</h4>
-          <ul>
-            {comments.map((comment) => (
-              <li key={comment.comment_id}>
-                <div>
-                  {comment.body}
-                  <button
-                    onClick={() => openEditModal("comment", comment)}
-                    data-bs-toggle="modal" data-bs-target="#editModal"
-                  >
-                    Edit
-                  </button>
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          <div className="row">
+
+            {/* Articles Section */}
+            <div className="col-md-6 mb-4">
+              <div className="card">
+                <div className="card-header d-flex justify-content-between align-items-center">
+                  <h4>Your Articles</h4>
+                  <div className="d-flex align-items-center">
+                  {articles.length > 0 && (
+                    <button
+                      className="btn btn-outline-danger btn-sm me-3"
+                      onClick={() => handleDeleteAllArticles()}
+                    >
+                      Delete All
+                    </button>
+                  )}
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        type="button"
+                        id="articleSortDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Sort By
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="articleSortDropdown">
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('created_at')}>Date {articleSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('votes')}>Likes {articleSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortBy('comment_count')}>Comments {articleSortBy === 'comment_count' && <i className="fas fa-check"></i>}</button></li>
+                        <div className="dropdown-divider"></div>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('asc')}>Ascending {articleSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setArticleSortOrder('desc')}>Descending {articleSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+                <ul className="list-group list-group-flush">
+                  {sortArticles(articles).slice(0, articleDisplayCount).length > 0 ? (
+                    sortArticles(articles).slice(0, articleDisplayCount).map((article) => (
+                      <li key={article.article_id} className="list-group-item">
+                        <div className="article-meta mb-1 d-flex justify-content-between align-items-center">
+                          <span className="text-muted small">Posted on {moment(article.created_at).format("DD MMM YYYY")}</span>
+                          <Link to={`/articles/${article.article_id}`} className="ms-auto">
+                            <i className="fas fa-link" style={{ color: '#345284' }}></i>
+                          </Link>
+                        </div>
+                        <div>
+                          {article.title}
+                        </div>
+                        <div className="article-preview text-muted small"
+                            dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(article.body.length > 150 ? article.body.substring(0, 150) + '...' : article.body),
+                        }}>
+                        </div>
+                        <div className="mt-2 d-flex justify-content-between align-items-center">
+                          <div>
+                            <span className="me-3">
+                              <i className="fas fa-message" style={{ color: '#345284' }}></i> {article.comment_count}
+                              <i className="fas fa-thumbs-up ms-3" style={{ color: '#345284' }}></i> {article.votes}
+                            </span>
+                          </div>
+                          <div>
+                            <button
+                            className="btn btn-outline-secondary btn-sm me-2"
+                            onClick={() => openEditModal('article', article.body, article.article_id)}
+                            >
+                            <i className="fas fa-edit"></i>
+                            </button>
+                            <button
+                              className="btn btn-outline-danger btn-sm"
+                              onClick={() => 
+                                openDeleteModal('article', article.article_id, `Are you sure you want to delete this article?`)}
+                            >
+                              <i className="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-group-item text-muted">No articles available.</li>
+                  )}
+                </ul>
+                <div className="card-footer d-flex justify-content-between align-items-center">
+                  <span>Showing {Math.min(articleDisplayCount, articles.length)} of {articles.length} Articles</span>
+                  {articles.length > articleDisplayCount && (
+                    <button className="btn btn-primary" onClick={loadMoreArticles}>
+                      Load More
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Comments Section */}
+            <div className="col-md-6 mb-4">
+              <div className="card">
+                <div className="card-header d-flex justify-content-between align-items-center">
+                  <h4>Your Comments</h4>
+                  <div className="d-flex align-items-center">
+                  {comments.length > 0 && (
+                    <button
+                      className="btn btn-outline-danger btn-sm me-3"
+                      onClick={() => handleDeleteAllComments()}
+                    >
+                      Delete All
+                    </button>
+                  )}
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-secondary btn-sm dropdown-toggle"
+                        type="button"
+                        id="comment Dropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Sort By
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="commentSortDropdown">
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('created_at')}>Date {commentSortBy === 'created_at' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortBy('votes')}>Likes {commentSortBy === 'votes' && <i className="fas fa-check"></i>}</button></li>
+                        <div className="dropdown-divider"></div>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('asc')}>Ascending {commentSortOrder === 'asc' && <i className="fas fa-check"></i>}</button></li>
+                        <li><button className="dropdown-item" onClick={() => setCommentSortOrder('desc')}>Descending {commentSortOrder === 'desc' && <i className="fas fa-check"></i>}</button></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <ul className="list-group list-group-flush">
+                  {sortComments(comments).slice(0, commentDisplayCount).length > 0 ? (
+                    sortComments(comments).slice(0, commentDisplayCount).map((comment) => (
+                      <li key={comment.comment_id} className="list-group-item">
+                        <div className="comment-meta mb-1 d-flex justify-content-between align-items-center">
+                          <span className="text-muted small">Commented on {moment(comment.created_at).format("DD MMM YYYY")}</span>
+                          <Link to={`/articles/${comment.article_id}`} className="ms-auto">
+                            <i className="fas fa-link" style={{ color: '#345284' }}></i>
+                          </Link>
+                        </div>
+                        <div>
+                          {comment.body.length > 150 ? comment.body.substring(0, 150) + '...' : comment.body}
+                        </div>
+                        <div className="mt-2 d-flex justify-content-between align-items-center">
+                          <div>
+                            <span>
+                              <i className="fas fa-thumbs-up" style={{ color: '#345284' }}></i> {comment.votes}
+                            </span>
+                          </div>
+                          <div>
+                            <button
+                              className="btn btn-outline-secondary btn-sm me-2"
+                              onClick={() => openEditModal('comment', comment.body, comment.comment_id)}
+                            >
+                              <i className="fas fa-edit"></i>
+                            </button>
+                            <button
+                              className="btn btn-outline-danger btn-sm"
+                              onClick={() => 
+                                openDeleteModal('comment', comment.comment_id, `Are you sure you want to delete this comment?`)
+                              }
+                            >
+                              <i className="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="list-group-item text-muted">No comments available.</li>
+                  )}
+                </ul>
+                <div className="card-footer d-flex justify-content-between align-items-center">
+                  <span>Showing {Math.min(commentDisplayCount, comments.length)} of {comments.length} Comments</span>
+                  {comments.length > commentDisplayCount && (
+                    <button className="btn btn-primary" onClick={loadMoreComments}>
+                      Load More
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
