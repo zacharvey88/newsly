@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useContext, useEffect } from "react";
-import { UserContext } from "../contexts/User";
+import { UserContext } from "../contexts/UserContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default () => {
