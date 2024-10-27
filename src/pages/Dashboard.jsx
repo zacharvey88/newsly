@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { Link } from "react-router-dom";
-import moment from "moment";
 import LoadingScreen from "../utilities/LoadingScreen";
-import DOMPurify from "dompurify";
 import DeleteConfirmation from "../utilities/DeleteModal";
 import { useModal } from "../contexts/ModalContext"; 
 import SortDropdown from '../components/SortDropdown';
+import ArticleListItem from '../components/ArticleListItem'; 
+import CommentListItem from '../components/CommentListItem';
+import CardFooter from '../components/CardFooter';
+
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
@@ -159,7 +160,7 @@ export default function UserDashboard() {
                         key={article.article_id} 
                         article={article} 
                         openDeleteModal={openDeleteModal} 
-                        openEditModal={() => handleEdit(article, 'article')} // Pass the article data
+                        openEditModal={() => handleEdit(article, 'article')}
                       />
                     ))
                   ) : (
