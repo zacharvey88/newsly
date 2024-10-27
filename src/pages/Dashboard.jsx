@@ -7,6 +7,7 @@ import LoadingScreen from "../utilities/LoadingScreen";
 import DOMPurify from "dompurify";
 import DeleteConfirmation from "../utilities/DeleteModal";
 import { useModal } from "../contexts/ModalContext"; 
+import SortDropdown from '../components/SortDropdown';
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
