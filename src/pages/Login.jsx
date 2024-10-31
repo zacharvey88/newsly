@@ -4,43 +4,36 @@ import { UserContext } from "../contexts/UserContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default () => {
-  const [hidden, setHidden] = useState(true);
-  const { user, setUser } = useContext(UserContext);
+  const { loginUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
-  const [warningMsg, setWarningMsg] = useState(false);
+  const [warningMsg, setWarningMsg] = useState("");
   const [loginMsg, setLoginMsg] = useState("");
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
 
   useEffect(() => {
     if (location.state && location.state.message) {
-      setLoginMsg(location.state.message); 
+      setLoginMsg(location.state.message);
     }
   }, [location.state]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-
     if (!username) {
       setWarningMsg("Please enter a username");
       return;
-    } else {
-      axios
-        .get(`https://nc-news-ngma.onrender.com/api/users/${username}`)
-        .then((response) => {
-          setUser(response.data.user);
-          setHidden(true);
-          setUsername("");
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-          navigate("/");
-        })
-        .catch((err) => {
-          if (err.response.status === 404) {
-            setWarningMsg("Username not found");
-            setHidden(false);
-            setUsername("");
-          }
-        });
+    }
+
+    try {
+      const response = await axios.get(`https://nc-news-ngma.onrender.com/api/users/${username}`);
+      loginUser(response.data.user);
+      setUsername("");
+      navigate("/");
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setWarningMsg("Username not found");
+        setUsername("");
+      }
     }
   }
 
@@ -60,22 +53,20 @@ export default () => {
           value={username}
           onChange={(e) => {
             setUsername(e.target.value);
-            setWarningMsg(false);
+            setWarningMsg("");
           }}
           placeholder="Enter your username"
-        ></input>
+        />
         <input
           type="submit"
-          className={"btn btn-sm btn-outline-secondary"}
+          className="btn btn-sm btn-outline-secondary"
           value="Login"
-        ></input>
-        <div className="login-error-msgs">
-          {warningMsg && (
-            <p className="warning">
-              <i className="fa-solid fa-triangle-exclamation"></i> {warningMsg}
-            </p>
-          )}
-        </div>
+        />
+        {warningMsg && (
+          <p className="warning">
+            <i className="fa-solid fa-triangle-exclamation"></i> {warningMsg}
+          </p>
+        )}
       </form>
     </div>
   );
