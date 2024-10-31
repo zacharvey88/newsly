@@ -10,15 +10,11 @@ import DropdownItem from 'react-bootstrap/DropdownItem';
 import { useModal } from "../../contexts/ModalContext"; 
 
 export default () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, logoutUser } = useContext(UserContext);
+
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { openModal } = useModal(); 
-
-  const handleLogout = () => {
-    setUser({});
-    localStorage.removeItem("user");
-  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -83,7 +79,7 @@ export default () => {
               </DropdownToggle>
               <DropdownMenu>
                 <DropdownItem onClick={() => navigate(`/dashboard`)}>Dashboard</DropdownItem>
-                <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+                <DropdownItem onClick={logoutUser}>Logout</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           ) : (
