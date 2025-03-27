@@ -30,6 +30,10 @@ export default function ArticleForm({
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    if (!user) {
+      setErrorMessage("You must be logged in to submit.");
+      return;
+    }
     setLoading(true);
     setErrorMessage("");
 

@@ -72,7 +72,7 @@ export default () => {
               <i className="fa-solid fa-magnifying-glass search-icon"></i> 
             </div>
           </form>
-          {user.username ? (
+          {user?.username? (
             <Dropdown>
               <DropdownToggle as={Link}>
                 <img className="nav-user-avatar rounded-circle" src={user.avatar_url} alt="User Avatar" />
