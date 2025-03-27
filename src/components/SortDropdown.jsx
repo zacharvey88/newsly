@@ -16,10 +16,10 @@ const SortDropdown = ({ setSort, sortState, type }) => {
       </DropdownToggle>
 
       <DropdownMenu>
-        <DropdownItem onClick={() => handleSortChange('created_at', 'desc')}>Date (Newest)</DropdownItem>
-        <DropdownItem onClick={() => handleSortChange('created_at', 'asc')}>Date (Oldest)</DropdownItem>
-        <DropdownItem onClick={() => handleSortChange('title', 'asc')}>Title (A-Z)</DropdownItem>
-        <DropdownItem onClick={() => handleSortChange('title', 'desc')}>Title (Z-A)</DropdownItem>
+        <DropdownItem onClick={() => handleSortChange('Date', 'desc')}>Date (Newest)</DropdownItem>
+        <DropdownItem onClick={() => handleSortChange('Date', 'asc')}>Date (Oldest)</DropdownItem>
+        <DropdownItem onClick={() => handleSortChange('Title', 'asc')}>Title (A-Z)</DropdownItem>
+        <DropdownItem onClick={() => handleSortChange('Title', 'desc')}>Title (Z-A)</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

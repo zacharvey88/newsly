@@ -28,13 +28,13 @@ export default function UserDashboard() {
   const [isDeleteAll, setIsDeleteAll] = useState(false);
 
   useEffect(() => {
+    if (!user) return;
     const fetchData = async () => {
       await Promise.all([fetchUserArticles(), fetchUserComments()]);
       setLoading(false);
     };
-
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchUserArticles = async () => {
     try {
