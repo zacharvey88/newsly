@@ -23,10 +23,11 @@ export default function ArticlesPage() {
       .get(`https://nc-news-ngma.onrender.com/api/articles?limit=${limit}`)
       .then((response) => {
         setTotalArticles(response.data.total_count);
-        setIsLoading(false);
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }, []);
