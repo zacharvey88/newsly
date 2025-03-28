@@ -557,7 +557,7 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 .main-nav-links .link-secondary {
   border: none;
-  background-color: none;
+  background-color: transparent;
 }
 
 .main-nav-toggle {
