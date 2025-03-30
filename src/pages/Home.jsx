@@ -20,7 +20,7 @@ export default function ArticlesPage() {
 
   useEffect(() => {
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?limit=${limit}`)
+      .get(`https://newsly-piuq.onrender.com/api/articles?limit=${limit}`)
       .then((response) => {
         setTotalArticles(response.data.total_count);
       })
@@ -34,7 +34,7 @@ export default function ArticlesPage() {
 
   useEffect(() => {
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=votes&limit=3`)
+      .get(`https://newsly-piuq.onrender.com/api/articles?sort_by=votes&limit=3`)
       .then((response) => {
         setArticlesByVotes(response.data.articles);
       })
@@ -45,7 +45,7 @@ export default function ArticlesPage() {
 
   useEffect(() => {
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?sort_by=comment_count&limit=3`)
+      .get(`https://newsly-piuq.onrender.com/api/articles?sort_by=comment_count&limit=3`)
       .then((response) => {
         setArticlesByCommentCount(response.data.articles);
       })
@@ -62,7 +62,7 @@ export default function ArticlesPage() {
     }
 
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles?limit=${limit}&offset=${offset}`)
+      .get(`https://newsly-piuq.onrender.com/api/articles?limit=${limit}&offset=${offset}`)
       .then((response) => {
         setArticles((prevArticles) => [...prevArticles, ...response.data.articles]);
         setIsLoading(false);

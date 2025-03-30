@@ -22,7 +22,7 @@ export default function ArticleForm({
   useEffect(() => {
     if (contentType === "article") {
       axios
-        .get("https://nc-news-ngma.onrender.com/api/topics")
+        .get("https://newsly-piuq.onrender.com/api/topics")
         .then((response) => setTopics(response.data.topics))
         .catch(() => setErrorMessage("Error fetching topics."));
     }
@@ -116,7 +116,7 @@ export default function ArticleForm({
         </>
       )}
 
-      <div className="text-center">
+      <div>
         <button type="submit" className="btn btn-sm btn-outline-secondary w-auto" disabled={loading}>
           {isEditMode ? "Save Changes" : "Submit Article"}
         </button>

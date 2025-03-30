@@ -19,7 +19,7 @@ export default () => {
   const searchTerm = searchParams.get("search");
 
   useEffect(() => {
-    let query = `https://nc-news-ngma.onrender.com/api/articles`;
+    let query = `https://newsly-piuq.onrender.com/api/articles`;
 
     if (topic) {
       query += `?topic=${topic}`;

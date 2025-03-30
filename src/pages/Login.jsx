@@ -25,7 +25,7 @@ export default () => {
     }
 
     try {
-      const response = await axios.get(`https://nc-news-ngma.onrender.com/api/users/${username}`);
+      const response = await axios.get(`https://newsly-piuq.onrender.com/api/users/${username}`);
       loginUser(response.data.user);
       setUsername("");
       navigate("/");

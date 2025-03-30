@@ -16,7 +16,7 @@ export default ({ article_id }) => {
   useEffect(() => {
     axios
       .get(
-        `https://nc-news-ngma.onrender.com/api/articles/${article_id}/comments`
+        `https://newsly-piuq.onrender.com/api/articles/${article_id}/comments`
       )
       .then((response) => {
         setComments(response.data.comments);
@@ -48,7 +48,7 @@ export default ({ article_id }) => {
     };
 
     axios
-      .post(`https://nc-news-ngma.onrender.com/api/articles/${article_id}/comments`, newComment)
+      .post(`https://newsly-piuq.onrender.com/api/articles/${article_id}/comments`, newComment)
       .then((response) => {
         const newComment = {
           ...response.data.comment,
@@ -74,7 +74,7 @@ export default ({ article_id }) => {
     setComments((existingComments) => {
       return existingComments.filter((comment) => comment.comment_id !== comment_id);
     });
-    axios.delete(`https://nc-news-ngma.onrender.com/api/comments/${comment_id}`)
+    axios.delete(`https://newsly-piuq.onrender.com/api/comments/${comment_id}`)
     .then((response)=>{
       console.log(response.data);
     })
