@@ -22,7 +22,7 @@ export default () => {
     }
 
     axios
-      .get(`https://nc-news-ngma.onrender.com/api/articles/${article_id}`)
+      .get(`https://newsly-piuq.onrender.com/api/articles/${article_id}`)
       .then((response) => {
         setArticle(response.data.article);
         setVotes(response.data.article.votes);
@@ -39,7 +39,7 @@ export default () => {
     setLiked(true);
     setVotes(votes + 1);
     axios
-      .patch(`https://nc-news-ngma.onrender.com/api/articles/${article_id}`, {
+      .patch(`https://newsly-piuq.onrender.com/api/articles/${article_id}`, {
         inc_votes: votes + 1,
       })
       .then((response) => {
@@ -58,7 +58,7 @@ export default () => {
     setLiked(false);
     setVotes(votes - 1);
     axios
-      .patch(`https://nc-news-ngma.onrender.com/api/articles/${article_id}`, {
+      .patch(`https://newsly-piuq.onrender.com/api/articles/${article_id}`, {
         inc_votes: votes - 1,
       })
       .then((response) => {

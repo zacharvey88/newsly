@@ -38,7 +38,7 @@ export default function UserDashboard() {
 
   const fetchUserArticles = async () => {
     try {
-      const response = await axios.get(`https://nc-news-ngma.onrender.com/api/articles?author=${user.username}`);
+      const response = await axios.get(`https://newsly-piuq.onrender.com/api/articles?author=${user.username}`);
       setArticles(response.data.articles);
     } catch (error) {
       setErrorMessage("There was a problem loading your dashboard. Please try refreshing the page.");
@@ -47,7 +47,7 @@ export default function UserDashboard() {
 
   const fetchUserComments = async () => {
     try {
-      const response = await axios.get(`https://nc-news-ngma.onrender.com/api/users/${user.username}/comments`);
+      const response = await axios.get(`https://newsly-piuq.onrender.com/api/users/${user.username}/comments`);
       setComments(response.data.comments);
     } catch (error) {
       setErrorMessage("Error fetching your comments.");
@@ -60,7 +60,7 @@ export default function UserDashboard() {
 
   const handleDelete = async (type, id) => {
     try {
-      const url = type === 'article' ? `https://nc-news-ngma.onrender.com/api/articles/${id}` : `https://nc-news-ngma.onrender.com/api/comments/${id}`;
+      const url = type === 'article' ? `https://newsly-piuq.onrender.com/api/articles/${id}` : `https://newsly-piuq.onrender.com/api/comments/${id}`;
       await axios.delete(url);
       if (type === 'article') {
         setArticles(articles.filter((article) => article.article_id !== id));

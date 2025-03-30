@@ -7,7 +7,7 @@ export default () => {
 
   useEffect(() => {
     axios
-      .get("https://nc-news-ngma.onrender.com/api/topics")
+      .get("https://newsly-piuq.onrender.com/api/topics")
       .then((response) => {
         setTopics(response.data.topics);
       })
