@@ -6,7 +6,7 @@ const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {
     <li className="list-group-item d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
         <div className="fw-bold">{article.title}</div>
-        <small className="text-muted">Published on {moment(article.created_at).format('MMMM Do YYYY')}</small>
+        <small className="text-muted">Published on {moment(article.created_at).format('MMM Do YYYY')}</small>
       </div>
       <div>
         <button className="btn btn-outline-primary btn-sm me-2" onClick={openEditModal}>

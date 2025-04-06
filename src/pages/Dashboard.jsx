@@ -18,8 +18,8 @@ export default function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [articleSort, setArticleSort] = useState({ by: 'created_at', order: 'desc', displayCount: 10 });
-  const [commentSort, setCommentSort] = useState({ by: 'created_at', order: 'desc', displayCount: 10 });
+  const [articleSort, setArticleSort] = useState({ by: 'Date', order: '↓', displayCount: 10 });
+  const [commentSort, setCommentSort] = useState({ by: 'Date', order: '↓', displayCount: 10 });
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
