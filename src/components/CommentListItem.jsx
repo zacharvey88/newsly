@@ -6,7 +6,7 @@ const CommentListItem = ({ comment, openDeleteModal, handleEdit }) => {
     <li className="list-group-item d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
         <div dangerouslySetInnerHTML={{ __html: comment.body }} />
-        <small className="text-muted">Commented on {moment(comment.created_at).format('MMMM Do YYYY')}</small>
+        <small className="text-muted">Posted on {moment(comment.created_at).format('MMM Do YYYY')}</small>
       </div>
       <div>
         <button className="btn btn-outline-primary btn-sm me-2" onClick={handleEdit}>

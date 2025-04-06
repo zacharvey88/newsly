@@ -16,8 +16,8 @@ const SortDropdown = ({ setSort, sortState, type }) => {
       </DropdownToggle>
 
       <DropdownMenu>
-        <DropdownItem onClick={() => handleSortChange('Date', 'desc')}>Date (Newest)</DropdownItem>
-        <DropdownItem onClick={() => handleSortChange('Date', 'asc')}>Date (Oldest)</DropdownItem>
+        <DropdownItem onClick={() => handleSortChange('Date', 'desc')}>Date Desc</DropdownItem>
+        <DropdownItem onClick={() => handleSortChange('Date', 'asc')}>Date Asc</DropdownItem>
         <DropdownItem onClick={() => handleSortChange('Title', 'asc')}>Title (A-Z)</DropdownItem>
         <DropdownItem onClick={() => handleSortChange('Title', 'desc')}>Title (Z-A)</DropdownItem>
       </DropdownMenu>
