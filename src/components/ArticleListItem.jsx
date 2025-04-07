@@ -1,9 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom'; // Make sure to import this
+import { Link } from 'react-router-dom';
 
 const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {
-  // Trim to 100 characters at last full word
   const trimText = (text) => {
     if (text.length <= 100) return text;
     const trimmed = text.substring(0, 100);
@@ -17,9 +16,21 @@ const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {
           {article.title}
         </Link>
         <div>{trimText(article.body)}</div>
-        <small className="text-muted">
-          Published on {moment(article.created_at).format('MMM Do YYYY')}
-        </small>
+        <div className="d-flex justify-content-between mt-1">
+          <small className="text-muted">
+            Published on {moment(article.created_at).format('MMM Do YYYY')}
+          </small>
+          <small className="text-muted">
+            <span className="me-3">
+              <i className="bi bi-heart me-1"></i>
+              {article.votes || 0}
+            </span>
+            <span>
+              <i className="bi bi-chat me-1"></i>
+              {article.comment_count || 0}
+            </span>
+          </small>
+        </div>
       </div>
       <div className="d-flex gap-2">
         <button 
@@ -27,14 +38,14 @@ const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {
           onClick={openEditModal}
           title="Edit"
         >
-          <i className="bi bi-pencil"></i> {/* Bootstrap Icons - add to your project */}
+          <i className="bi bi-pencil"></i>
         </button>
         <button
           className="btn btn-outline-danger btn-sm"
           onClick={() => openDeleteModal('article', article.article_id, `Are you sure you want to delete the article "${article.title}"?`)}
           title="Delete"
         >
-          <i className="bi bi-trash"></i> {/* Bootstrap Icons */}
+          <i className="bi bi-trash"></i>
         </button>
       </div>
     </li>

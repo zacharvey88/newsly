@@ -11,7 +11,13 @@ const SortDropdown = ({ setSort, sortState, type }) => {
 
   return (
     <Dropdown>
-      <DropdownToggle variant="outline-secondary" id="dropdown-basic">
+      <DropdownToggle 
+        variant="outline-secondary" 
+        id="dropdown-basic"
+        size="sm" 
+        className="py-1" 
+        style={{ fontSize: '0.875rem' }} 
+      >
         Sort by: {sortState.by} {sortState.order === 'asc' ? '↑' : '↓'}
       </DropdownToggle>
 
