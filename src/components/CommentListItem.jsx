@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 
 const CommentListItem = ({ comment, openDeleteModal, handleEdit }) => {
-  // Trim to 100 characters at last full word
   const trimText = (text) => {
     if (text.length <= 100) return text;
     const trimmed = text.substring(0, 100);
@@ -12,6 +11,9 @@ const CommentListItem = ({ comment, openDeleteModal, handleEdit }) => {
   return (
     <li className="list-group-item d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
+        <div className="fw-bold">
+          {comment.article_title} by {comment.author}
+        </div>
         <div dangerouslySetInnerHTML={{ __html: trimText(comment.body) }} />
         <small className="text-muted">
           Posted on {moment(comment.created_at).format('MMM Do YYYY')}
