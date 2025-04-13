@@ -6,9 +6,8 @@ import DeleteConfirmation from "../utilities/DeleteModal";
 import { useModal } from "../contexts/ModalContext"; 
 import SortDropdown from '../components/SortDropdown';
 import ArticleListItem from '../components/ArticleListItem'; 
-import CommentListItem from '../components/CommentListItem';
+import CommentList from '../components/CommentList'; // New component
 import CardFooter from '../components/CardFooter';
-
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
@@ -54,8 +53,8 @@ export default function UserDashboard() {
     }
   };
 
-  const handleEdit = (article, type) => {
-    openModal(article, type, true);
+  const handleEdit = (item, type) => {
+    openModal(item, type, true);
   };
 
   const handleDelete = async (type, id) => {
@@ -69,6 +68,17 @@ export default function UserDashboard() {
       }
     } catch (error) {
       setErrorMessage(`Error deleting ${type}.`);
+    }
+  };
+
+  const handleDeleteAllCommentsForArticle = async (articleId) => {
+    try {
+      const commentIds = comments
+        .filter(comment => comment.article_id === articleId)
+        .map(comment => comment.comment_id);
+      await Promise.all(commentIds.map(id => handleDelete('comment', id)));
+    } catch (error) {
+      setErrorMessage("Error deleting comments for article.");
     }
   };
 
@@ -96,8 +106,10 @@ export default function UserDashboard() {
 
   const confirmDelete = async () => {
     setShowDeleteModal(false);
-    if (isDeleteAll) {
-      await handleDeleteAll(deleteType);
+    if (isDeleteAll && deleteType === 'comment') {
+      await handleDeleteAll('comment');
+    } else if (isDeleteAll && deleteType === 'article_comments') {
+      await handleDeleteAllCommentsForArticle(deleteId);
     } else {
       await handleDelete(deleteType, deleteId);
     }
@@ -118,8 +130,27 @@ export default function UserDashboard() {
     });
   };
 
+  const groupedComments = comments.reduce((acc, comment) => {
+    const article = articles.find(a => a.article_id === comment.article_id);
+    if (!article) return acc; // Skip if no matching article
+    if (!acc[comment.article_id]) {
+      acc[comment.article_id] = {
+        article,
+        comments: []
+      };
+    }
+    acc[comment.article_id].comments.push(comment);
+    return acc;
+  }, {});
+
+  const sortedGroupedComments = Object.values(groupedComments).sort((a, b) => {
+    const comparison = commentSort.order === 'asc' 
+      ? a.article[commentSort.by] > b.article[commentSort.by]
+      : a.article[commentSort.by] < b.article[commentSort.by];
+    return comparison ? 1 : -1;
+  }).slice(0, commentSort.displayCount);
+
   const sortedArticles = sortItems(articles, articleSort).slice(0, articleSort.displayCount);
-  const sortedComments = sortItems(comments, commentSort).slice(0, commentSort.displayCount);
 
   if (loading) return <LoadingScreen />;
 
@@ -138,7 +169,6 @@ export default function UserDashboard() {
       <div className="row justify-content-center">
         <div className="col-lg-10">
           <div className="row">
-
             {/* Articles Section */}
             <div className="col-md-6 mb-4">
               <div className="card">
@@ -146,7 +176,10 @@ export default function UserDashboard() {
                   <h4>Your Articles</h4>
                   <div className="d-flex align-items-center">
                     {articles.length > 0 && (
-                      <button className="btn btn-outline-danger btn-sm me-3" onClick={() => openDeleteModal('article', null, <>Are you sure you want to delete <strong>ALL</strong> articles?</>, true)}>
+                      <button 
+                        className="btn btn-outline-danger btn-sm me-3" 
+                        onClick={() => openDeleteModal('article', null, <>Are you sure you want to delete <strong>ALL</strong> articles?</>, true)}
+                      >
                         Delete All
                       </button>
                     )}
@@ -167,7 +200,11 @@ export default function UserDashboard() {
                     <li className="list-group-item text-muted">No articles available.</li>
                   )}
                 </ul>
-                <CardFooter displayCount={articleSort.displayCount} totalCount={articles.length} loadMore={() => loadMore('article')} />
+                <CardFooter 
+                  displayCount={articleSort.displayCount} 
+                  totalCount={articles.length} 
+                  loadMore={() => loadMore('article')} 
+                />
               </div>
             </div>
 
@@ -178,7 +215,10 @@ export default function UserDashboard() {
                   <h4>Your Comments</h4>
                   <div className="d-flex align-items-center">
                     {comments.length > 0 && (
-                      <button className="btn btn-outline-danger btn-sm me-3" onClick={() => openDeleteModal('comment', null, <>Are you sure you want to delete <strong>ALL</strong> comments?</>, true)}>
+                      <button 
+                        className="btn btn-outline-danger btn-sm me-3" 
+                        onClick={() => openDeleteModal('comment', null, <>Are you sure you want to delete <strong>ALL</strong> comments?</>, true)}
+                      >
                         Delete All
                       </button>
                     )}
@@ -186,23 +226,27 @@ export default function UserDashboard() {
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  {sortedComments.length > 0 ? (
-                    sortedComments.map((comment) => (
-                      <CommentListItem 
-                        key={comment.comment_id} 
-                        comment={comment} 
-                        openDeleteModal={openDeleteModal} 
-                        handleEdit={() => handleEdit(comment, 'comment')} 
+                  {sortedGroupedComments.length > 0 ? (
+                    sortedGroupedComments.map(({ article, comments }) => (
+                      <CommentList 
+                        key={article.article_id}
+                        article={article}
+                        comments={comments}
+                        openDeleteModal={openDeleteModal}
+                        handleEdit={handleEdit}
                       />
                     ))
                   ) : (
                     <li className="list-group-item text-muted">No comments available.</li>
                   )}
                 </ul>
-                <CardFooter displayCount={commentSort.displayCount} totalCount={comments.length} loadMore={() => loadMore('comment')} />
+                <CardFooter 
+                  displayCount={commentSort.displayCount} 
+                  totalCount={Object.keys(groupedComments).length} 
+                  loadMore={() => loadMore('comment')} 
+                />
               </div>
             </div>
-
           </div>
         </div>
       </div>
