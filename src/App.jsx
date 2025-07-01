@@ -12,6 +12,7 @@ import ArticleForm from './pages/ArticleForm';
 import UserDashboard from './pages/Dashboard';
 import BackToTop from './components/BackToTopButton';
 import ProtectedRoute from './utilities/ProtectedRoute'
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/new-article" element={<ProtectedRoute><ArticleForm /></ProtectedRoute>} />
           <Route exact path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+          <Route exact path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       </div>
       <Footer />

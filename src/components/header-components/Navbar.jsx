@@ -78,7 +78,8 @@ export default () => {
                 <img className="nav-user-avatar rounded-circle" src={user.avatar_url} alt="User Avatar" />
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => navigate(`/dashboard`)}>Dashboard</DropdownItem>
+              <DropdownItem onClick={() => navigate(`/profile`)}>Profile</DropdownItem>
+              <DropdownItem onClick={() => navigate(`/dashboard`)}>Dashboard</DropdownItem>
                 <DropdownItem onClick={logoutUser}>Logout</DropdownItem>
               </DropdownMenu>
             </Dropdown>
