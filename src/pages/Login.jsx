@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export default () => {
   const { loginUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [warningMsg, setWarningMsg] = useState("");
   const [loginMsg, setLoginMsg] = useState("");
   const navigate = useNavigate();
@@ -19,21 +20,29 @@ export default () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!username) {
-      setWarningMsg("Please enter a username");
+    if (!username || !password) {
+      setWarningMsg("Please enter both username and password");
       return;
     }
 
     try {
-      const response = await axios.get(`https://newsly-piuq.onrender.com/api/users/${username}`);
+      const response = await axios.post(`https://newsly-piuq.onrender.com/api/login`, {
+        username,
+        password
+      });
       loginUser(response.data.user);
       setUsername("");
+      setPassword("");
+      setWarningMsg("");
       navigate("/");
     } catch (err) {
-      if (err.response && err.response.status === 404) {
-        setWarningMsg("Username not found");
-        setUsername("");
+      if (err.response && err.response.status === 401) {
+        setWarningMsg("Invalid username or password");
+      } else {
+        setWarningMsg("Login failed. Please try again.");
       }
+      setUsername("");
+      setPassword("");
     }
   }
 
@@ -56,6 +65,18 @@ export default () => {
             setWarningMsg("");
           }}
           placeholder="Enter your username"
+        />
+        <input
+          type="password"
+          id="login-password"
+          name="password"
+          className={warningMsg ? "warning-border" : null}
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setWarningMsg("");
+          }}
+          placeholder="Enter your password"
         />
         <input
           type="submit"

@@ -6,7 +6,7 @@ import DeleteConfirmation from "../utilities/DeleteModal";
 import { useModal } from "../contexts/ModalContext"; 
 import SortDropdown from '../components/SortDropdown';
 import ArticleListItem from '../components/ArticleListItem'; 
-import CommentList from '../components/CommentList'; // New component
+import CommentList from '../components/CommentList';
 import CardFooter from '../components/CardFooter';
 
 export default function UserDashboard() {
