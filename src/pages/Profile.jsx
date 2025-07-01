@@ -47,90 +47,106 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-      
-      <form onSubmit={handleUpdateProfile} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+      <div className="card" style={{ maxWidth: 420, width: '100%', margin: '2rem 0', boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
+        <div className="card-header text-center" style={{ background: 'none', borderBottom: 'none', paddingTop: '2rem' }}>
+          <img
+            src={avatarUrl || require('../assets/avatar-placeholder.png')}
+            alt="User avatar"
+            className="rounded-circle nav-user-avatar mb-3"
+            style={{ objectFit: 'cover', border: '2px solid #eee', background: '#fafafa' }}
           />
+          <h2 style={{ fontFamily: 'Playfair Display, Georgia, Times New Roman, serif', fontWeight: 700, fontSize: '1.7rem' }}>{user?.username}</h2>
         </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Avatar URL</label>
-          <input
-            type="url"
-            value={avatarUrl}
-            onChange={(e) => setAvatarUrl(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
+        <div className="card-body">
+          <form onSubmit={handleUpdateProfile} className="login-form" style={{ gap: 10 }}>
+            <div style={{ width: '100%' }}>
+              <label className="small" htmlFor="profile-name">Name</label>
+              <input
+                id="profile-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="form-control"
+                style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
+              />
+            </div>
+            <div style={{ width: '100%' }}>
+              <label className="small" htmlFor="profile-avatar">Avatar URL</label>
+              <input
+                id="profile-avatar"
+                type="url"
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                className="form-control"
+                style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
+              />
+            </div>
+            {error && <p className="warning" style={{ margin: 0 }}>{error}</p>}
+            {success && <p className="text-success" style={{ color: '#198754', margin: 0 }}>{success}</p>}
+            <input
+              type="submit"
+              value="Update Profile"
+              className="login-btn"
+              style={{ width: '100%', marginTop: 10 }}
+            />
+          </form>
+          <button
+            onClick={() => setIsPasswordModalOpen(true)}
+            className="btn btn-comment"
+            style={{ width: '100%', background: '#345284', color: 'white', marginTop: 20, borderRadius: 20, border: 'none' }}
+          >
+            Reset Password
+          </button>
         </div>
-
-        {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500">{success}</p>}
-
-        <button
-          type="submit"
-          className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-        >
-          Update Profile
-        </button>
-      </form>
-
-      <button
-        onClick={() => setIsPasswordModalOpen(true)}
-        className="mt-4 w-full py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-      >
-        Reset Password
-      </button>
-
-      {isPasswordModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-sm w-full">
-            <h3 className="text-xl font-bold mb-4">Reset Password</h3>
-            <form onSubmit={handlePasswordReset} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">New Password</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => setIsPasswordModalOpen(false)}
-                  className="py-2 px-4 bg-gray-300 rounded-md hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                >
-                  Save New Password
-                </button>
-              </div>
-            </form>
+        {isPasswordModalOpen && (
+          <div className="fixed-top d-flex justify-content-center align-items-center" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1050 }}>
+            <div className="card" style={{ maxWidth: 350, width: '100%', padding: 24, borderRadius: 10 }}>
+              <h3 className="mb-3" style={{ fontWeight: 700, fontSize: '1.2rem' }}>Reset Password</h3>
+              <form onSubmit={handlePasswordReset} className="login-form" style={{ gap: 10 }}>
+                <div style={{ width: '100%' }}>
+                  <label className="small" htmlFor="current-password">Current Password</label>
+                  <input
+                    id="current-password"
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="form-control"
+                    style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
+                  />
+                </div>
+                <div style={{ width: '100%' }}>
+                  <label className="small" htmlFor="new-password">New Password</label>
+                  <input
+                    id="new-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="form-control"
+                    style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
+                  />
+                </div>
+                <div className="d-flex justify-content-end" style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordModalOpen(false)}
+                    className="btn"
+                    style={{ background: '#eee', borderRadius: 20, padding: '6px 18px', border: 'none' }}
+                  >
+                    Cancel
+                  </button>
+                  <input
+                    type="submit"
+                    value="Save New Password"
+                    className="login-btn"
+                    style={{ background: '#345284', color: 'white', borderRadius: 20, border: 'none', padding: '6px 18px' }}
+                  />
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
