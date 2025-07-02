@@ -49,7 +49,7 @@ footer {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .flex-auto {
@@ -111,9 +111,11 @@ h1, h2, h3, h4, h5, h6 {
 /* ---------- Featured Articles ---------- */
 
 .featured-article-img-container {
-  width: 200px; 
+  width: 220px; 
   height: 250px; 
   overflow: hidden;
+  display: flex;
+  justify-content: end;
 }
 
 .featured-article-img {
@@ -233,7 +235,6 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 5px;
     width: 100%;
     height: auto;
-    max-height: 150px;
   }
 }
 

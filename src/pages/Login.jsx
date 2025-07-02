@@ -26,7 +26,7 @@ export default () => {
     }
 
     try {
-      const response = await axios.post(`https://newsly-piuq.onrender.com/api/login`, {
+      const response = await axios.post(`https://newsly-piuq.onrender.com/api/users/login`, {
         username,
         password
       });
