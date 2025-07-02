@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import LoadingScreen from "../utilities/LoadingScreen";
+import DOMPurify from "dompurify"; 
 
 export default ({ article }) => {
   if (!article) {
@@ -13,9 +14,10 @@ export default ({ article }) => {
     >
       <div className="col-lg-6 px-0">
         <h1 className="display-4">{article.title}</h1>
-        <p className="lead my-3">
-          {article.body.split(".").slice(0, 2).join(".")}
-        </p>
+        <p className="lead my-3"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(article.body.split(".").slice(0, 2).join(".")),
+          }}></p>
         <p className="lead mb-0">
           <Link
             to={`/articles/${article.article_id}`}

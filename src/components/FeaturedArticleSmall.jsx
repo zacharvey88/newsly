@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import LoadingScreen from "../utilities/LoadingScreen";
+import DOMPurify from "dompurify"; 
 
 export default function ArticlesList({ articles }) {
   if (!articles) {
@@ -23,7 +24,10 @@ export default function ArticlesList({ articles }) {
               <div className="mb-1 text-body-secondary">
                 {article.created_at.slice(0, 10)}
               </div>
-              <p className="card-text mb-auto">{article.body.slice(0, 80)}</p>
+              <p className="card-text mb-auto"
+              dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(article.body.slice(0, 80)),
+                  }}></p>
               <Link
                 to={`/articles/${article.article_id}`}
                 className="icon-link gap-1 icon-link-hover stretched-link"
