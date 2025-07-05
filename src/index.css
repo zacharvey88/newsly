@@ -334,6 +334,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
 }
 
 .login-form input[type="submit"] {
@@ -342,7 +343,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
   margin: 10px;
   border: none;
-  width: 13em;
+  width: 250px;
 }
 
 .login-form input[type="submit"]:hover {

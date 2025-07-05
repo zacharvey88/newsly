@@ -49,7 +49,7 @@ export default () => {
 
     const urlParams = { sort_by: sortBy, sort_dir: toggled ? 'asc' : 'desc' };
     const url = queryString.stringify(urlParams);
-    window.history.pushState({}, '', `/${topic || "search"}${url ? `?${url}` : ''}`);
+    window.history.replaceState({}, '', `/${topic || "search"}${url ? `?${url}` : ''}`);
   }, [topic, sortBy, toggled, searchTerm]);
 
   return isError ? (
