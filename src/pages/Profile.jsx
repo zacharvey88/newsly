@@ -47,107 +47,160 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <div className="card" style={{ maxWidth: 420, width: '100%', margin: '2rem 0', boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
-        <div className="card-header text-center" style={{ background: 'none', borderBottom: 'none', paddingTop: '2rem' }}>
-          <img
-            src={avatarUrl || require('../assets/avatar-placeholder.png')}
-            alt="User avatar"
-            className="rounded-circle nav-user-avatar mb-3"
-            style={{ objectFit: 'cover', border: '2px solid #eee', background: '#fafafa' }}
-          />
-          <h2 style={{ fontFamily: 'Playfair Display, Georgia, Times New Roman, serif', fontWeight: 700, fontSize: '1.7rem' }}>{user?.username}</h2>
-        </div>
-        <div className="card-body">
-          <form onSubmit={handleUpdateProfile} className="login-form" style={{ gap: 10 }}>
-            <div style={{ width: '100%' }}>
-              <label className="small" htmlFor="profile-name">Name</label>
-              <input
-                id="profile-name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="form-control"
-                style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
-              />
-            </div>
-            <div style={{ width: '100%' }}>
-              <label className="small" htmlFor="profile-avatar">Avatar URL</label>
-              <input
-                id="profile-avatar"
-                type="url"
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                className="form-control"
-                style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
-              />
-            </div>
-            {error && <p className="warning" style={{ margin: 0 }}>{error}</p>}
-            {success && <p className="text-success" style={{ color: '#198754', margin: 0 }}>{success}</p>}
-            <input
-              type="submit"
-              value="Update Profile"
-              className="login-btn"
-              style={{ width: '100%', marginTop: 10 }}
-            />
-          </form>
-          <button
-            onClick={() => setIsPasswordModalOpen(true)}
-            className="btn btn-comment"
-            style={{ width: '100%', background: '#345284', color: 'white', marginTop: 20, borderRadius: 20, border: 'none' }}
-          >
-            Reset Password
-          </button>
-        </div>
-        {isPasswordModalOpen && (
-          <div className="fixed-top d-flex justify-content-center align-items-center" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1050 }}>
-            <div className="card" style={{ maxWidth: 350, width: '100%', padding: 24, borderRadius: 10 }}>
-              <h3 className="mb-3" style={{ fontWeight: 700, fontSize: '1.2rem' }}>Reset Password</h3>
-              <form onSubmit={handlePasswordReset} className="login-form" style={{ gap: 10 }}>
-                <div style={{ width: '100%' }}>
-                  <label className="small" htmlFor="current-password">Current Password</label>
-                  <input
-                    id="current-password"
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    className="form-control"
-                    style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
+    <section className="vh-100" style={{ backgroundColor: "#508bfc" }}>
+      <div className="container py-5 h-100">
+        <div className="row d-flex justify-content-center align-items-center h-100">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div className="card shadow-2-strong" style={{ borderRadius: "1rem" }}>
+              <div className="card-body p-5 text-center">
+                <div className="mb-4">
+                  <img
+                    src={avatarUrl || require('../assets/avatar-placeholder.png')}
+                    alt="User avatar"
+                    className="rounded-circle mb-3"
+                    style={{ 
+                      width: "80px", 
+                      height: "80px", 
+                      objectFit: "cover", 
+                      border: "3px solid #508bfc", 
+                      background: "#fafafa" 
+                    }}
                   />
+                  <h3 className="mb-4">{user?.username}</h3>
                 </div>
-                <div style={{ width: '100%' }}>
-                  <label className="small" htmlFor="new-password">New Password</label>
-                  <input
-                    id="new-password"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="form-control"
-                    style={{ width: '100%', marginBottom: 10, borderRadius: 5, border: '1px solid #ccc', padding: '8px' }}
-                  />
-                </div>
-                <div className="d-flex justify-content-end" style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                  <button
-                    type="button"
-                    onClick={() => setIsPasswordModalOpen(false)}
-                    className="btn"
-                    style={{ background: '#eee', borderRadius: 20, padding: '6px 18px', border: 'none' }}
-                  >
-                    Cancel
-                  </button>
-                  <input
+
+                <form onSubmit={handleUpdateProfile}>
+                  <div className="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="profile-name"
+                      className="form-control form-control-lg"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Full Name"
+                    />
+                    <label className="form-label" htmlFor="profile-name">Full Name</label>
+                  </div>
+
+                  <div className="form-outline mb-4">
+                    <input
+                      type="url"
+                      id="profile-avatar"
+                      className="form-control form-control-lg"
+                      value={avatarUrl}
+                      onChange={(e) => setAvatarUrl(e.target.value)}
+                      placeholder="Avatar URL"
+                    />
+                    <label className="form-label" htmlFor="profile-avatar">Avatar URL</label>
+                  </div>
+
+                  {error && (
+                    <div className="alert alert-danger mb-4">
+                      <i className="fa-solid fa-triangle-exclamation me-2"></i> {error}
+                    </div>
+                  )}
+                  
+                  {success && (
+                    <div className="alert alert-success mb-4">
+                      <i className="fa-solid fa-check me-2"></i> {success}
+                    </div>
+                  )}
+
+                  <button 
+                    className="btn btn-primary btn-lg btn-block w-100 mb-3" 
                     type="submit"
-                    value="Save New Password"
-                    className="login-btn"
-                    style={{ background: '#345284', color: 'white', borderRadius: 20, border: 'none', padding: '6px 18px' }}
-                  />
-                </div>
-              </form>
+                    style={{ backgroundColor: "#345284", borderColor: "#345284" }}
+                  >
+                    Update Profile
+                  </button>
+                </form>
+
+                <button
+                  onClick={() => setIsPasswordModalOpen(true)}
+                  className="btn btn-outline-secondary btn-lg btn-block w-100"
+                  style={{ borderColor: "#345284", color: "#345284" }}
+                >
+                  Reset Password
+                </button>
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {/* Password Reset Modal */}
+      {isPasswordModalOpen && (
+        <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content shadow-2-strong" style={{ borderRadius: "1rem" }}>
+              <div className="modal-header border-0">
+                <h5 className="modal-title">Reset Password</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setIsPasswordModalOpen(false)}
+                ></button>
+              </div>
+              <div className="modal-body p-4">
+                <form onSubmit={handlePasswordReset}>
+                  <div className="form-outline mb-4">
+                    <input
+                      type="password"
+                      id="current-password"
+                      className="form-control form-control-lg"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="Current Password"
+                    />
+                    <label className="form-label" htmlFor="current-password">Current Password</label>
+                  </div>
+
+                  <div className="form-outline mb-4">
+                    <input
+                      type="password"
+                      id="new-password"
+                      className="form-control form-control-lg"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="New Password"
+                    />
+                    <label className="form-label" htmlFor="new-password">New Password</label>
+                  </div>
+
+                  {error && (
+                    <div className="alert alert-danger mb-4">
+                      <i className="fa-solid fa-triangle-exclamation me-2"></i> {error}
+                    </div>
+                  )}
+
+                  <div className="d-flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsPasswordModalOpen(false)}
+                      className="btn btn-outline-secondary flex-fill"
+                      style={{ borderRadius: "20px" }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary flex-fill"
+                      style={{ 
+                        backgroundColor: "#345284", 
+                        borderColor: "#345284",
+                        borderRadius: "20px"
+                      }}
+                    >
+                      Save New Password
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
   );
 };
 
