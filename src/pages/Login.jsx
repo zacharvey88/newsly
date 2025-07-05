@@ -64,19 +64,19 @@ export default () => {
             setUsername(e.target.value);
             setWarningMsg("");
           }}
-          placeholder="Enter your username"
+          placeholder="Username"
         />
         <input
           type="password"
           id="login-password"
-          name="password"
+          name="Password"
           className={warningMsg ? "warning-border" : null}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
             setWarningMsg("");
           }}
-          placeholder="Enter your password"
+          placeholder="password"
         />
         <input
           type="submit"

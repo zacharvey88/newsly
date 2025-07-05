@@ -15,7 +15,7 @@ const UserProfile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`/api/users/${user.username}`, {
+      const response = await axios.patch(`https://newsly-piuq.onrender.com/api/users/${user.username}`, {
         name,
         avatar_url: avatarUrl
       });
@@ -31,7 +31,7 @@ const UserProfile = () => {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`/api/users/${user.username}`, {
+      const response = await axios.patch(`https://newsly-piuq.onrender.com/api/users/${user.username}`, {
         password: newPassword
       });
       loginUser(response.data.user);

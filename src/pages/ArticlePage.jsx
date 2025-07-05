@@ -34,6 +34,10 @@ export default () => {
       });
   }, [article_id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [article_id]);
+
   const handleLike = () => {
     const votesBackup = votes;
     setLiked(true);

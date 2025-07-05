@@ -16,7 +16,9 @@ const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {
           <Link to={`/articles/${article.article_id}`} className="fw-bold text-decoration-none">
             {article.title}
           </Link>
-          <div>{trimText(article.body)}</div>
+          <div dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(trimText(article.body)),
+          }}></div>
         </div>
         <div className="col-auto">
           <div className="d-flex gap-2">
