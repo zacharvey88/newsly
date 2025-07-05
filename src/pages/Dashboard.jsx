@@ -8,6 +8,7 @@ import SortDropdown from '../components/SortDropdown';
 import ArticleListItem from '../components/ArticleListItem'; 
 import CommentList from '../components/CommentList';
 import CardFooter from '../components/CardFooter';
+import DOMPurify from "dompurify"; 
 
 export default function UserDashboard() {
   const { user } = useContext(UserContext);
