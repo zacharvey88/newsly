@@ -14,6 +14,10 @@ const UserProfile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+    if (!user?.username) {
+      setError('User not found');
+      return;
+    }
     try {
       const response = await axios.patch(`https://newsly-piuq.onrender.com/api/users/${user.username}`, {
         name,
@@ -30,6 +34,10 @@ const UserProfile = () => {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
+    if (!user?.username) {
+      setError('User not found');
+      return;
+    }
     try {
       const response = await axios.patch(`https://newsly-piuq.onrender.com/api/users/${user.username}`, {
         password: newPassword
