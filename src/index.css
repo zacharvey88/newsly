@@ -353,6 +353,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-user-avatar {
   height: 2.5em;
   width: 2.5em;
+  border: 1px solid rgb(52, 82, 132);
 }
 
 .delete-comment-icon {
@@ -683,11 +684,8 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 .form-outline .form-control:focus ~ .form-label,
 .form-outline .form-control:not(:placeholder-shown) ~ .form-label {
-  opacity: 0.65;
-  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+  transform: scale(.85) translateY(-1.7rem) translate(.4rem);
   background-color: white;
-  padding: 0 0.25rem;
-  margin-left: 0.5rem;
   color: #508bfc;
 }
 
@@ -702,4 +700,24 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 
 .shadow-2-strong {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ---------- Article Headlines Font ---------- */
+
+.article-headline {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.article-headline-large {
+  font-size: 2.5rem;
+}
+
+.article-headline-medium {
+  font-size: 1.75rem;
+}
+
+.article-headline-small {
+  font-size: 1.25rem;
 }

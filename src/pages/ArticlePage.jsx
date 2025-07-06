@@ -87,7 +87,7 @@ export default () => {
           <div className="col-lg-8">
             <article>
               <header className="mb-4">
-                <h1 className="fw-bolder mb-1">{article.title}</h1>
+                <h1 className="article-headline article-headline-large mb-1">{article.title}</h1>
                 <div className="text-muted fst-italic mb-2">
                   Posted on {new Date(article.created_at).toLocaleDateString()} by{" "}
                   {article.author}

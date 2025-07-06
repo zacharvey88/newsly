@@ -73,7 +73,7 @@ export default () => {
                   placeholder="Username"
                   autoFocus
                 />
-                <label className="form-label" htmlFor="typeUsernameX-2">Username</label>
+                <label className="form-label" htmlFor="typeUsernameX-2"></label>
               </div>
 
               <div className="form-outline mb-4">
@@ -88,7 +88,7 @@ export default () => {
                   }}
                   placeholder="Password"
                 />
-                <label className="form-label" htmlFor="typePasswordX-2">Password</label>
+                <label className="form-label" htmlFor="typePasswordX-2"></label>
               </div>
 
               {warningMsg && (
