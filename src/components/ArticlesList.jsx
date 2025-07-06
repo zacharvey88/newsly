@@ -33,7 +33,7 @@ export default ({ articles }) => {
         return (
           <li key={article.article_id} className="articles-list-item">
             <Link to={`/articles/${article.article_id}`}>
-              <h3 className="link-body-emphasis mb-1">{article.title}</h3>
+                              <h3 className="article-headline article-headline-medium mb-1">{article.title}</h3>
             </Link>
             <p className="blog-post-meta">
               {article.created_at.slice(0, 10)} by {article.author}

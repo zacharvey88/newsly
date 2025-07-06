@@ -9,13 +9,12 @@ export default function ArticleForm({
   onSubmit,
   isEditMode = false,
   contentType = "article",
+  isSubmitting = false,
 }) {
   const [title, setTitle] = useState(initialData.title || "");
   const [body, setBody] = useState(initialData.body || "");
   const [topic, setTopic] = useState(initialData.topic || "");
-  const [articleImgUrl, setArticleImgUrl] = useState(initialData.articleImgUrl || "");
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [articleImgUrl, setArticleImgUrl] = useState(initialData.article_img_url || initialData.articleImgUrl || "");
   const [topics, setTopics] = useState([]);
   const { user } = useContext(UserContext);
 
@@ -24,18 +23,15 @@ export default function ArticleForm({
       axios
         .get("https://newsly-piuq.onrender.com/api/topics")
         .then((response) => setTopics(response.data.topics))
-        .catch(() => setErrorMessage("Error fetching topics."));
+        .catch(() => console.error("Error fetching topics."));
     }
   }, [contentType]);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     if (!user) {
-      setErrorMessage("You must be logged in to submit.");
       return;
     }
-    setLoading(true);
-    setErrorMessage("");
 
     const cleanedBody = body.replace(/<p><br><\/p>/g, "").replace(/<p>\s*<\/p>/g, "");
 
@@ -47,13 +43,7 @@ export default function ArticleForm({
       article_img_url: contentType === "article" ? (articleImgUrl || null) : undefined,
     };
 
-    try {
-      await onSubmit(formData);
-    } catch {
-      setErrorMessage("Error submitting. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    await onSubmit(formData);
   };
 
   return (
@@ -67,7 +57,7 @@ export default function ArticleForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            disabled={loading}
+            disabled={isSubmitting}
           />
         </div>
       )}
@@ -79,7 +69,7 @@ export default function ArticleForm({
           value={body}
           onChange={setBody}
           className="quill-editor"
-          readOnly={loading}
+          readOnly={isSubmitting}
         />
       </div>
 
@@ -92,7 +82,7 @@ export default function ArticleForm({
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               required
-              disabled={loading}
+              disabled={isSubmitting}
             >
               <option value="">Select a topic</option>
               {topics.map((topicItem) => (
@@ -110,19 +100,17 @@ export default function ArticleForm({
               className="form-control form-control-sm"
               value={articleImgUrl}
               onChange={(e) => setArticleImgUrl(e.target.value)}
-              disabled={loading}
+              disabled={isSubmitting}
             />
           </div>
         </>
       )}
 
       <div>
-        <button type="submit" className="btn btn-sm btn-outline-secondary w-auto" disabled={loading}>
-          {isEditMode ? "Save Changes" : "Submit Article"}
+        <button type="submit" className="btn btn-sm btn-outline-secondary w-auto" disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : (isEditMode ? "Save Changes" : "Submit Article")}
         </button>
       </div>
-
-      {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
     </form>
   );
 }

@@ -13,7 +13,7 @@ export default ({ article }) => {
       style={{ backgroundImage: `url(${article.article_img_url})` }}
     >
       <div className="col-lg-6 px-0">
-        <h1 className="display-4">{article.title}</h1>
+                    <h1 className="article-headline article-headline-large">{article.title}</h1>
         <p className="lead my-3"
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(article.body.split(".").slice(0, 2).join(".")),
