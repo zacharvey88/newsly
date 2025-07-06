@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import DOMPurify from "dompurify"; 
 import { Link } from 'react-router-dom';
 
 const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {

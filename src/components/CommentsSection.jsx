@@ -30,7 +30,7 @@ export default ({ article_id }) => {
   const handleAddComment = (e) => {
     e.preventDefault();
 
-    if (!user.username) {
+    if (!user || !user.username) {
       setIsError(true)
       return setErrMsg("You must be logged in to comment")
     }
@@ -52,7 +52,7 @@ export default ({ article_id }) => {
       .then((response) => {
         const newComment = {
           ...response.data.comment,
-          avatar_url: user.avatar_url,
+          avatar_url: user?.avatar_url,
         };
         setComments((existingComments) => {
           return [newComment, ...existingComments];
@@ -133,7 +133,7 @@ export default ({ article_id }) => {
                           {comment.created_at.slice(0, 16)}
                         </span>
                         </div>
-                        {comment.author === user.username ? 
+                        {user && comment.author === user.username ? 
                           <span className="delete-comment">
                             <i onClick={()=>{handleRemoveComment(comment.comment_id)}} className="fa-solid fa-trash delete-comment-icon"></i>
                           </span>

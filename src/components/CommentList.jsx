@@ -52,7 +52,7 @@ const CommentList = ({ article, comments, openDeleteModal, handleEdit }) => {
               <li key={comment.comment_id} className="list-group-item">
                 <div className="d-flex justify-content-between align-items-start">
                   <div className="me-auto">
-                    <div dangerouslySetInnerHTML={{ __html: trimText(comment.body) }} />
+                    trimText(comment.body)
                     <small className="text-muted">
                       Posted on {moment(comment.created_at).format('MMM Do YYYY')}
                     </small>
