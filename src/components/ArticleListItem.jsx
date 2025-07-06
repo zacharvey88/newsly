@@ -15,7 +15,7 @@ const ArticleListItem = ({ article, openDeleteModal, openEditModal }) => {
       <div className="row align-items-start">
         <div className="col">
           <Link to={`/articles/${article.article_id}`} className="fw-bold text-decoration-none">
-                            <span className="article-headline article-headline-small">{article.title}</span>
+                            {article.title}
           </Link>
           <div dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(trimText(article.body)),

@@ -50,19 +50,18 @@ const Modal = () => {
           left: 0, 
           width: "100vw", 
           height: "100vh", 
-          backgroundColor: "rgba(0, 0, 0, 0.5)", 
+          backgroundColor: "rgba(0, 0, 0, 1)", 
           zIndex: 1040 
         }}
         onClick={closeModal}
       ></div>
       
       <div className="modal fade show" style={{ display: "block", zIndex: 1050 }}>
-        <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">{modalContent.isEditMode ? "Edit Article" : "Create Article"}</h5>
-              <button type="button" className="btn-close" onClick={closeModal}></button>
-            </div>
+                      <div className="modal-header">
+            <button type="button" className="btn-close" onClick={closeModal}></button>
+          </div>
             <div className="modal-body">
               {error && (
                 <div className="alert alert-danger mb-3">

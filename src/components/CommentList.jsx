@@ -17,7 +17,7 @@ const CommentList = ({ article, comments, openDeleteModal, handleEdit }) => {
           <div>
             <Link 
               to={`/articles/${article.article_id}`} 
-              className="fw-bold text-decoration-none fs-5 article-headline article-headline-small"
+              className="fw-bold text-decoration-none fs-5"
             >
               {article.title}
             </Link>
