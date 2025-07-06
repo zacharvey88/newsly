@@ -55,83 +55,79 @@ const UserProfile = () => {
   };
 
   return (
-    <section className="vh-100" style={{ backgroundColor: "#508bfc" }}>
-      <div className="container py-5 h-100">
-        <div className="row d-flex justify-content-center align-items-center h-100">
-          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div className="card shadow-2-strong" style={{ borderRadius: "1rem" }}>
-              <div className="card-body p-5 text-center">
-                <div className="mb-4">
-                  <img
-                    src={avatarUrl || require('../assets/avatar-placeholder.png')}
-                    alt="User avatar"
-                    className="rounded-circle mb-3"
-                    style={{ 
-                      width: "80px", 
-                      height: "80px", 
-                      objectFit: "cover", 
-                      border: "3px solid #508bfc", 
-                      background: "#fafafa" 
-                    }}
-                  />
-                  <h3 className="mb-4">{user?.username}</h3>
-                </div>
-
-                <form onSubmit={handleUpdateProfile}>
-                  <div className="form-outline mb-4">
-                    <input
-                      type="text"
-                      id="profile-name"
-                      className="form-control form-control-lg"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Full Name"
-                    />
-                    <label className="form-label" htmlFor="profile-name">Full Name</label>
-                  </div>
-
-                  <div className="form-outline mb-4">
-                    <input
-                      type="url"
-                      id="profile-avatar"
-                      className="form-control form-control-lg"
-                      value={avatarUrl}
-                      onChange={(e) => setAvatarUrl(e.target.value)}
-                      placeholder="Avatar URL"
-                    />
-                    <label className="form-label" htmlFor="profile-avatar">Avatar URL</label>
-                  </div>
-
-                  {error && (
-                    <div className="alert alert-danger mb-4">
-                      <i className="fa-solid fa-triangle-exclamation me-2"></i> {error}
-                    </div>
-                  )}
-                  
-                  {success && (
-                    <div className="alert alert-success mb-4">
-                      <i className="fa-solid fa-check me-2"></i> {success}
-                    </div>
-                  )}
-
-                  <button 
-                    className="btn btn-primary btn-lg btn-block w-100 mb-3" 
-                    type="submit"
-                    style={{ backgroundColor: "#345284", borderColor: "#345284" }}
-                  >
-                    Update Profile
-                  </button>
-                </form>
-
-                <button
-                  onClick={() => setIsPasswordModalOpen(true)}
-                  className="btn btn-outline-secondary btn-lg btn-block w-100"
-                  style={{ borderColor: "#345284", color: "#345284" }}
-                >
-                  Reset Password
-                </button>
-              </div>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
+      <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div className="card shadow-2-strong" style={{ borderRadius: "1rem" }}>
+          <div className="card-body p-5 text-center">
+            <div className="mb-4">
+              <img
+                src={avatarUrl || require('../assets/avatar-placeholder.png')}
+                alt="User avatar"
+                className="rounded-circle mb-3"
+                style={{ 
+                  width: "80px", 
+                  height: "80px", 
+                  objectFit: "cover", 
+                  border: "3px solid #345284", 
+                  background: "#fafafa" 
+                }}
+              />
+              <h3 className="mb-4">{user?.username}</h3>
             </div>
+
+            <form onSubmit={handleUpdateProfile}>
+              <div className="form-outline mb-4">
+                <input
+                  type="text"
+                  id="profile-name"
+                  className="form-control form-control-lg"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Full Name"
+                />
+                <label className="form-label" htmlFor="profile-name">Full Name</label>
+              </div>
+
+              <div className="form-outline mb-4">
+                <input
+                  type="url"
+                  id="profile-avatar"
+                  className="form-control form-control-lg"
+                  value={avatarUrl}
+                  onChange={(e) => setAvatarUrl(e.target.value)}
+                  placeholder="Avatar URL"
+                />
+                <label className="form-label" htmlFor="profile-avatar">Avatar URL</label>
+              </div>
+
+              {error && (
+                <div className="alert alert-danger mb-4">
+                  <i className="fa-solid fa-triangle-exclamation me-2"></i> {error}
+                </div>
+              )}
+              
+              {success && (
+                <div className="alert alert-success mb-4">
+                  <i className="fa-solid fa-check me-2"></i> {success}
+                </div>
+              )}
+
+              <button 
+                className="btn btn-primary btn-lg btn-block w-100 mb-3" 
+                type="submit"
+                style={{ backgroundColor: "#345284", borderColor: "#345284" }}
+              >
+                Update Profile
+              </button>
+            </form>
+
+            <button
+              onClick={() => setIsPasswordModalOpen(true)}
+              className="btn btn-outline-secondary btn-lg btn-block w-100"
+              style={{ borderColor: "#345284", color: "#345284" }}
+            >
+              Reset Password
+            </button>
           </div>
         </div>
       </div>
@@ -208,7 +204,7 @@ const UserProfile = () => {
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
